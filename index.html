@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Web Hub • BY SANNN</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial, sans-serif;
+  color:white;
+  background:
+    radial-gradient(circle at top,#173b68,transparent 45%),
+    linear-gradient(135deg,#050914,#0b1220);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.container{
+  width:100%;
+  max-width:600px;
+}
+
+/* HEADER */
+
+.header{
+  text-align:center;
+  margin-bottom:25px;
+  animation:fadeDown .7s ease;
+}
+
+.logo{
+  width:70px;
+  height:70px;
+  margin:auto;
+  border-radius:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  background:linear-gradient(
+    135deg,
+    #2563eb,
+    #7c3aed
+  );
+  box-shadow:0 15px 40px #2563eb55;
+  animation:float 3s ease-in-out infinite;
+}
+
+h1{
+  margin:15px 0 5px;
+  font-size:28px;
+}
+
+.subtitle{
+  color:#94a3b8;
+  font-size:13px;
+}
+
+/* MENU */
+
+.menu{
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+}
+
+.menu-button{
+  width:100%;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.07);
+  color:white;
+  border-radius:18px;
+  padding:17px;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  text-align:left;
+  cursor:pointer;
+  backdrop-filter:blur(12px);
+  transition:.25s;
+  animation:fadeUp .6s ease both;
+}
+
+.menu-button:nth-child(2){
+  animation-delay:.1s;
+}
+
+.menu-button:nth-child(3){
+  animation-delay:.2s;
+}
+
+.menu-button:hover{
+  transform:translateY(-4px) scale(1.01);
+  background:rgba(59,130,246,.18);
+  border-color:#3b82f6;
+  box-shadow:0 12px 30px #0005;
+}
+
+.icon{
+  width:50px;
+  height:50px;
+  flex-shrink:0;
+  border-radius:15px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:24px;
+  background:linear-gradient(
+    135deg,
+    #1d4ed8,
+    #7c3aed
+  );
+}
+
+.menu-text{
+  flex:1;
+}
+
+.menu-text strong{
+  display:block;
+  font-size:16px;
+  margin-bottom:5px;
+}
+
+.menu-text small{
+  color:#94a3b8;
+  font-size:11px;
+}
+
+.arrow{
+  color:#64748b;
+  font-size:22px;
+}
+
+/* FOOTER */
+
+.footer{
+  text-align:center;
+  color:#64748b;
+  font-size:10px;
+  margin-top:25px;
+  letter-spacing:2px;
+}
+
+/* ANIMASI */
+
+@keyframes fadeDown{
+  from{
+    opacity:0;
+    transform:translateY(-20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes float{
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-8px);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+
+    <div class="logo">
+      🌐
+    </div>
+
+    <h1>Web Hub</h1>
+
+    <div class="subtitle">
+      Pilih website yang ingin kamu buka
+    </div>
+
+  </div>
+
+
+  <div class="menu">
+
+    <!-- PILIHAN 1 -->
+
+    <button
+      class="menu-button"
+      onclick="openQuran()">
+
+      <div class="icon">
+        📖
+      </div>
+
+      <div class="menu-text">
+
+        <strong>
+          1. Web Al-Qur'an
+        </strong>
+
+        <small>
+          Baca Al-Qur'an dan gunakan fitur Islami
+        </small>
+
+      </div>
+
+      <div class="arrow">
+        ›
+      </div>
+
+    </button>
+
+
+    <!-- PILIHAN 2 -->
+
+    <button
+      class="menu-button"
+      onclick="comingSoon(2)">
+
+      <div class="icon">
+        🌐
+      </div>
+
+      <div class="menu-text">
+
+        <strong>
+          2. Web Segera Hadir
+        </strong>
+
+        <small>
+          Website lainnya akan ditambahkan
+        </small>
+
+      </div>
+
+      <div class="arrow">
+        ›
+      </div>
+
+    </button>
+
+
+    <!-- PILIHAN 3 -->
+
+    <button
+      class="menu-button"
+      onclick="comingSoon(3)">
+
+      <div class="icon">
+        ✨
+      </div>
+
+      <div class="menu-text">
+
+        <strong>
+          3. Web Segera Hadir
+        </strong>
+
+        <small>
+          Nantikan website berikutnya
+        </small>
+
+      </div>
+
+      <div class="arrow">
+        ›
+      </div>
+
+    </button>
+
+  </div>
+
+
+  <div class="footer">
+    BY SANNN
+  </div>
+
+</div>
+
+
+<script>
+
+function openQuran(){
+
+  window.location.href =
+    "https://muhammadakhsan0512-web.github.io/Al-quran-by-sannn/";
+
+}
+
+
+function comingSoon(number){
+
+  alert(
+    "Web nomor " +
+    number +
+    " belum tersedia."
+  );
+
+}
+
+</script>
+
+</body>
+</html>
