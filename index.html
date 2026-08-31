@@ -2,186 +2,151 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Web Hub • BY SANNN</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SANNN SERVICE</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
 body{
-  margin:0;
-  min-height:100vh;
   font-family:Arial,sans-serif;
+  background:#080b12;
   color:#fff;
-  background:
-    radial-gradient(circle at 20% 0%,#173d6b 0%,transparent 35%),
-    radial-gradient(circle at 100% 100%,#32145c 0%,transparent 35%),
-    linear-gradient(135deg,#050914,#0b1220);
-  display:flex;
-  justify-content:center;
-  padding:25px 16px;
+  min-height:100vh;
 }
+button,input,select{font:inherit}
+button{cursor:pointer;border:0}
 
 .container{
-  width:100%;
-  max-width:600px;
-}
-
-/* HEADER */
-
-.header{
-  text-align:center;
-  margin:20px 0 28px;
-  animation:fadeDown .7s ease;
+  width:min(100%,500px);
+  margin:auto;
+  padding:20px;
 }
 
 .logo{
-  width:78px;
-  height:78px;
-  margin:auto;
-  border-radius:24px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:36px;
-  background:linear-gradient(135deg,#2563eb,#7c3aed);
-  box-shadow:0 15px 45px #2563eb55;
-  animation:float 3s ease-in-out infinite;
-}
-
-h1{
-  margin:16px 0 6px;
+  text-align:center;
   font-size:30px;
+  font-weight:900;
+  margin:20px 0 5px;
+}
+.sub{
+  text-align:center;
+  color:#8992a5;
+  margin-bottom:25px;
 }
 
-.subtitle{
-  color:#94a3b8;
-  font-size:14px;
+.card{
+  background:#111722;
+  border:1px solid #202938;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:15px;
+  box-shadow:0 10px 30px #0005;
 }
 
-/* MENU */
+h2{margin-bottom:15px}
 
-.menu{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-
-.menu-button{
+input,select{
   width:100%;
-  border:1px solid rgba(255,255,255,.1);
-  background:rgba(255,255,255,.07);
+  padding:14px;
+  margin:7px 0;
+  background:#090d15;
+  border:1px solid #293346;
+  color:white;
+  border-radius:12px;
+  outline:none;
+}
+
+input:focus,select:focus{
+  border-color:#6c7cff;
+}
+
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  background:#5865f2;
   color:#fff;
-  border-radius:20px;
+  font-weight:bold;
+  margin-top:10px;
+}
+.btn:hover{filter:brightness(1.1)}
+
+.btn.red{background:#e5484d}
+.btn.green{background:#20a464}
+.btn.gray{background:#293346}
+
+.hidden{display:none!important}
+
+.service{
   padding:16px;
-  display:flex;
-  align-items:center;
-  gap:15px;
-  text-align:left;
-  cursor:pointer;
-  backdrop-filter:blur(15px);
-  box-shadow:0 8px 25px rgba(0,0,0,.15);
-  transition:.25s ease;
-  animation:fadeUp .6s ease both;
+  background:#0c111b;
+  border:1px solid #273144;
+  border-radius:15px;
+  margin:10px 0;
 }
 
-.menu-button:nth-child(2){
-  animation-delay:.1s;
-}
-
-.menu-button:nth-child(3){
-  animation-delay:.2s;
-}
-
-.menu-button:active{
-  transform:scale(.97);
-}
-
-.menu-button:hover{
-  transform:translateY(-4px);
-  background:rgba(59,130,246,.18);
-  border-color:#3b82f6;
-  box-shadow:0 15px 35px #0006;
-}
-
-.icon{
-  width:52px;
-  height:52px;
-  flex-shrink:0;
-  border-radius:16px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:25px;
-  background:linear-gradient(135deg,#1d4ed8,#7c3aed);
-}
-
-.menu-text{
-  flex:1;
-}
-
-.menu-text strong{
+.service b{
   display:block;
   font-size:17px;
   margin-bottom:5px;
 }
 
-.menu-text small{
-  color:#94a3b8;
-  font-size:11px;
-  line-height:1.4;
+.price{
+  color:#7f91ff;
+  font-weight:bold;
 }
 
-.arrow{
-  color:#64748b;
-  font-size:27px;
+.order{
+  background:#0b1019;
+  border:1px solid #293346;
+  border-radius:15px;
+  padding:15px;
+  margin:10px 0;
 }
 
-/* FOOTER */
-
-.footer{
-  text-align:center;
-  color:#64748b;
-  font-size:11px;
-  margin-top:28px;
-  letter-spacing:2px;
+.status{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:8px;
+  font-size:12px;
+  margin-top:8px;
+  background:#755b00;
 }
 
-/* ANIMATION */
+.status.proses{background:#234d91}
+.status.selesai{background:#17683f}
 
-@keyframes fadeDown{
-  from{
-    opacity:0;
-    transform:translateY(-25px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+.nav{
+  display:flex;
+  gap:8px;
+  margin-bottom:15px;
 }
 
-@keyframes fadeUp{
-  from{
-    opacity:0;
-    transform:translateY(25px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+.nav button{
+  flex:1;
+  padding:11px;
+  border-radius:10px;
+  background:#171e2b;
+  color:white;
 }
 
-@keyframes float{
-  0%,100%{
-    transform:translateY(0);
-  }
-  50%{
-    transform:translateY(-8px);
-  }
+.small{
+  color:#8e98aa;
+  font-size:13px;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+
+.badge{
+  background:#1c2637;
+  padding:7px 10px;
+  border-radius:9px;
+  font-size:12px;
 }
 </style>
 </head>
@@ -190,128 +155,723 @@ h1{
 
 <div class="container">
 
-  <div class="header">
+  <!-- AUTH -->
+  <section id="auth">
 
-    <div class="logo">
-      🌐
+    <div class="logo">⚡ SANNN SERVICE</div>
+    <div class="sub">Joki AFK • Service</div>
+
+    <div class="card" id="loginBox">
+      <h2>🔐 Login</h2>
+
+      <input id="loginEmail" type="email" placeholder="Email">
+      <input id="loginPass" type="password" placeholder="Password">
+
+      <button class="btn" onclick="login()">LOGIN</button>
+
+      <button class="btn gray" onclick="showRegister()">
+        Belum punya akun? Daftar
+      </button>
     </div>
 
-    <h1>Web Hub</h1>
+    <div class="card hidden" id="registerBox">
+      <h2>📝 Daftar Akun</h2>
 
-    <div class="subtitle">
-      Pilih website yang ingin kamu buka
+      <input id="regName" placeholder="Nama / Username">
+      <input id="regEmail" type="email" placeholder="Email">
+      <input id="regPass" type="password" placeholder="Password">
+
+      <button class="btn green" onclick="register()">
+        DAFTAR
+      </button>
+
+      <button class="btn gray" onclick="showLogin()">
+        Sudah punya akun? Login
+      </button>
     </div>
 
-  </div>
+  </section>
 
 
-  <div class="menu">
+  <!-- CUSTOMER -->
+  <section id="customer" class="hidden">
 
-    <!-- WEB 1 -->
-
-    <button
-      class="menu-button"
-      onclick="openQuran()">
-
-      <div class="icon">
-        📖
+    <div class="top">
+      <div>
+        <b>⚡ SANNN SERVICE</b>
+        <div class="small" id="customerName"></div>
       </div>
 
-      <div class="menu-text">
-        <strong>1. Web Al-Qur'an</strong>
+      <button class="btn red" style="width:auto;margin:0;padding:9px 12px"
+        onclick="logout()">Keluar</button>
+    </div>
 
-        <small>
-          Baca Al-Qur'an dan gunakan fitur Islami
-        </small>
+    <div class="nav">
+      <button onclick="customerPage('services')">🛒 Pesan</button>
+      <button onclick="customerPage('history')">📋 Pesanan</button>
+    </div>
+
+
+    <!-- SERVICES -->
+    <div id="servicesPage">
+
+      <div class="card">
+        <h2>🎮 Joki AFK</h2>
+
+        <div class="service">
+          <b>1 Jam</b>
+          <span class="price">Rp1.000</span>
+        </div>
+
+        <div class="service">
+          <b>3 Jam</b>
+          <span class="price">Rp2.500</span>
+        </div>
+
+        <div class="service">
+          <b>5 Jam</b>
+          <span class="price">Rp4.000</span>
+        </div>
+
+        <div class="service">
+          <b>10 Jam</b>
+          <span class="price">Rp7.000</span>
+        </div>
+
+        <div class="service">
+          <b>12 Jam</b>
+          <span class="price">Rp8.000</span>
+        </div>
+
+        <div class="service">
+          <b>24 Jam</b>
+          <span class="price">Rp12.000</span>
+        </div>
+
+        <select id="afkPackage">
+          <option value="1 Jam|1000">1 Jam — Rp1.000</option>
+          <option value="3 Jam|2500">3 Jam — Rp2.500</option>
+          <option value="5 Jam|4000">5 Jam — Rp4.000</option>
+          <option value="10 Jam|7000">10 Jam — Rp7.000</option>
+          <option value="12 Jam|8000">12 Jam — Rp8.000</option>
+          <option value="24 Jam|12000">24 Jam — Rp12.000</option>
+        </select>
+
+        <input id="afkTarget" placeholder="Username / detail pesanan">
+
+        <button class="btn" onclick="orderAFK()">
+          PESAN JOKI AFK
+        </button>
       </div>
 
-      <div class="arrow">
-        ›
+
+      <div class="card">
+        <h2>📱 Service Follower / CH</h2>
+
+        <div class="service">
+          <b>100 Followers</b>
+          <span class="price">Rp600</span>
+        </div>
+
+        <div class="service">
+          <b>500 Followers</b>
+          <span class="price">Rp3.000</span>
+        </div>
+
+        <div class="service">
+          <b>1.000 Followers</b>
+          <span class="price">Rp6.700</span>
+        </div>
+
+        <select id="followPackage">
+          <option value="100 Followers|600">100 Followers — Rp600</option>
+          <option value="500 Followers|3000">500 Followers — Rp3.000</option>
+          <option value="1000 Followers|6700">1.000 Followers — Rp6.700</option>
+        </select>
+
+        <input id="followTarget" placeholder="Username / link">
+
+        <button class="btn" onclick="orderFollower()">
+          BUAT PESANAN
+        </button>
       </div>
 
-    </button>
+    </div>
 
 
-    <!-- WEB 2 -->
+    <!-- HISTORY -->
+    <div id="historyPage" class="hidden">
 
-    <button
-      class="menu-button"
-      onclick="openTabungan()">
-
-      <div class="icon">
-        💰
+      <div class="card">
+        <h2>📋 Pesanan Saya</h2>
+        <div id="myOrders"></div>
       </div>
 
-      <div class="menu-text">
-        <strong>2. Web Tabungan</strong>
+    </div>
 
-        <small>
-          Dashboard tabungan dan keuangan
-        </small>
+  </section>
+
+
+  <!-- OWNER -->
+  <section id="owner" class="hidden">
+
+    <div class="top">
+      <div>
+        <b>👑 OWNER PANEL</b>
+        <div class="small">SANNN SERVICE</div>
       </div>
 
-      <div class="arrow">
-        ›
-      </div>
+      <button class="btn red" style="width:auto;margin:0;padding:9px 12px"
+        onclick="logout()">Keluar</button>
+    </div>
 
-    </button>
+    <div class="card">
+      <h2>📊 Statistik</h2>
 
+      <p>Pesanan: <b id="totalOrders">0</b></p>
+      <p style="margin-top:8px">
+        User terdaftar: <b id="totalUsers">-</b>
+      </p>
+    </div>
 
-    <!-- WEB 3 -->
+    <div class="card">
+      <h2>📦 Semua Pesanan</h2>
+      <div id="allOrders"></div>
+    </div>
 
-    <button
-      class="menu-button"
-      onclick="comingSoon()">
-
-      <div class="icon">
-        ✨
-      </div>
-
-      <div class="menu-text">
-        <strong>3. Web Segera Hadir</strong>
-
-        <small>
-          Website berikutnya akan ditambahkan
-        </small>
-      </div>
-
-      <div class="arrow">
-        ›
-      </div>
-
-    </button>
-
-  </div>
-
-
-  <div class="footer">
-    BY SANNN
-  </div>
+  </section>
 
 </div>
 
 
-<script>
+<!-- FIREBASE -->
+<script type="module">
 
-function openQuran(){
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
-  window.location.href =
-  "https://muhammadakhsan0512-web.github.io/Al-quran-by-sannn/";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+  onSnapshot,
+  query,
+  orderBy
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/* =====================================
+   GANTI DENGAN CONFIG FIREBASE KAMU
+===================================== */
+
+const firebaseConfig = {
+  apiKey: "MASUKKAN_API_KEY",
+  authDomain: "PROJECT-KAMU.firebaseapp.com",
+  projectId: "PROJECT-KAMU",
+  storageBucket: "PROJECT-KAMU.firebasestorage.app",
+  messagingSenderId: "MASUKKAN_ID",
+  appId: "MASUKKAN_APP_ID"
+};
+
+
+/* ===================================== */
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+
+/*
+  Masukkan UID akun owner kamu di sini.
+
+  Caranya:
+  1. Buat akun owner melalui Firebase Authentication
+  2. Login sekali
+  3. Lihat UID akun tersebut
+  4. Masukkan UID ke OWNER_UID
+*/
+
+const OWNER_UID = "ISI_UID_OWNER";
+
+
+let currentUser = null;
+
+
+/* =========================
+   UI
+========================= */
+
+window.showRegister = function(){
+  loginBox.classList.add("hidden");
+  registerBox.classList.remove("hidden");
+}
+
+window.showLogin = function(){
+  registerBox.classList.add("hidden");
+  loginBox.classList.remove("hidden");
+}
+
+window.customerPage = function(page){
+
+  servicesPage.classList.toggle(
+    "hidden",
+    page !== "services"
+  );
+
+  historyPage.classList.toggle(
+    "hidden",
+    page !== "history"
+  );
+
+  if(page === "history"){
+    loadMyOrders();
+  }
+}
+
+
+/* =========================
+   REGISTER
+========================= */
+
+window.register = async function(){
+
+  const name = regName.value.trim();
+  const email = regEmail.value.trim();
+  const pass = regPass.value;
+
+  if(!name || !email || !pass){
+    alert("Lengkapi semua data.");
+    return;
+  }
+
+  if(pass.length < 6){
+    alert("Password minimal 6 karakter.");
+    return;
+  }
+
+  try{
+
+    const result =
+      await createUserWithEmailAndPassword(
+        auth,
+        email,
+        pass
+      );
+
+    await setDoc(
+      doc(db,"users",result.user.uid),
+      {
+        name:name,
+        email:email,
+        role:"customer",
+        createdAt:Date.now()
+      }
+    );
+
+    alert("Pendaftaran berhasil!");
+
+  }catch(error){
+    alert(error.message);
+  }
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+window.login = async function(){
+
+  const email = loginEmail.value.trim();
+  const pass = loginPass.value;
+
+  if(!email || !pass){
+    alert("Masukkan email dan password.");
+    return;
+  }
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      pass
+    );
+
+  }catch(error){
+    alert("Login gagal: " + error.message);
+  }
+}
+
+
+/* =========================
+   AUTH STATE
+========================= */
+
+onAuthStateChanged(auth,async(user)=>{
+
+  currentUser = user;
+
+  auth.classList.toggle("hidden",!!user);
+  customer.classList.add("hidden");
+  owner.classList.add("hidden");
+
+  if(!user) return;
+
+
+  if(user.uid === OWNER_UID){
+
+    owner.classList.remove("hidden");
+    loadAllOrders();
+
+  }else{
+
+    customer.classList.remove("hidden");
+
+    const snap =
+      await getDoc(
+        doc(db,"users",user.uid)
+      );
+
+    if(snap.exists()){
+
+      customerName.textContent =
+        "👤 " + snap.data().name;
+
+    }else{
+
+      customerName.textContent =
+        user.email;
+
+    }
+  }
+
+});
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+window.logout = function(){
+  signOut(auth);
+}
+
+
+/* =========================
+   ORDER AFK
+========================= */
+
+window.orderAFK = async function(){
+
+  const data =
+    afkPackage.value.split("|");
+
+  const target =
+    afkTarget.value.trim();
+
+  if(!target){
+    alert("Masukkan username/detail pesanan.");
+    return;
+  }
+
+  try{
+
+    await addDoc(
+      collection(db,"orders"),
+      {
+        userId:currentUser.uid,
+        email:currentUser.email,
+        service:"Joki AFK",
+        package:data[0],
+        price:Number(data[1]),
+        target:target,
+        status:"Menunggu",
+        createdAt:Date.now()
+      }
+    );
+
+    afkTarget.value="";
+
+    alert("Pesanan berhasil dikirim ke owner!");
+
+  }catch(error){
+
+    alert(error.message);
+
+  }
+}
+
+
+/* =========================
+   ORDER FOLLOWER
+========================= */
+
+window.orderFollower = async function(){
+
+  const data =
+    followPackage.value.split("|");
+
+  const target =
+    followTarget.value.trim();
+
+  if(!target){
+    alert("Masukkan username/link.");
+    return;
+  }
+
+  try{
+
+    await addDoc(
+      collection(db,"orders"),
+      {
+        userId:currentUser.uid,
+        email:currentUser.email,
+        service:"Service Follower / CH",
+        package:data[0],
+        price:Number(data[1]),
+        target:target,
+        status:"Menunggu",
+        createdAt:Date.now()
+      }
+    );
+
+    followTarget.value="";
+
+    alert("Pesanan berhasil dikirim ke owner!");
+
+  }catch(error){
+
+    alert(error.message);
+
+  }
+}
+
+
+/* =========================
+   CUSTOMER ORDERS
+========================= */
+
+function loadMyOrders(){
+
+  const q =
+    query(
+      collection(db,"orders"),
+      orderBy("createdAt","desc")
+    );
+
+  onSnapshot(q,(snapshot)=>{
+
+    myOrders.innerHTML="";
+
+    snapshot.forEach(item=>{
+
+      const d=item.data();
+
+      if(d.userId !== currentUser.uid)
+        return;
+
+      let cls="";
+
+      if(d.status==="Diproses")
+        cls="proses";
+
+      if(d.status==="Selesai")
+        cls="selesai";
+
+      myOrders.innerHTML += `
+
+        <div class="order">
+
+          <b>${escapeHTML(d.service)}</b>
+
+          <p style="margin-top:7px">
+            ${escapeHTML(d.package)}
+          </p>
+
+          <p class="small">
+            Target: ${escapeHTML(d.target)}
+          </p>
+
+          <p style="margin-top:7px">
+            Rp${Number(d.price).toLocaleString("id-ID")}
+          </p>
+
+          <span class="status ${cls}">
+            ${escapeHTML(d.status)}
+          </span>
+
+        </div>
+
+      `;
+
+    });
+
+  });
 
 }
 
 
-function openTabungan(){
+/* =========================
+   OWNER ORDERS
+========================= */
 
-  window.location.href =
-  "https://muhammadakhsan0512-web.github.io/Tabungan.akhsan/";
+function loadAllOrders(){
+
+  const q =
+    query(
+      collection(db,"orders"),
+      orderBy("createdAt","desc")
+    );
+
+  onSnapshot(q,(snapshot)=>{
+
+    allOrders.innerHTML="";
+    totalOrders.textContent=snapshot.size;
+
+    snapshot.forEach(item=>{
+
+      const d=item.data();
+
+      let cls="";
+
+      if(d.status==="Diproses")
+        cls="proses";
+
+      if(d.status==="Selesai")
+        cls="selesai";
+
+      allOrders.innerHTML += `
+
+        <div class="order">
+
+          <b>${escapeHTML(d.service)}</b>
+
+          <p>${escapeHTML(d.package)}</p>
+
+          <p class="small">
+            Customer: ${escapeHTML(d.email)}
+          </p>
+
+          <p class="small">
+            Target: ${escapeHTML(d.target)}
+          </p>
+
+          <p style="margin-top:7px">
+            Rp${Number(d.price).toLocaleString("id-ID")}
+          </p>
+
+          <span class="status ${cls}">
+            ${escapeHTML(d.status)}
+          </span>
+
+          <select
+            onchange="changeStatus('${item.id}',this.value)"
+            style="margin-top:10px">
+
+            <option ${d.status==="Menunggu"?"selected":""}>
+              Menunggu
+            </option>
+
+            <option ${d.status==="Diproses"?"selected":""}>
+              Diproses
+            </option>
+
+            <option ${d.status==="Selesai"?"selected":""}>
+              Selesai
+            </option>
+
+          </select>
+
+          <button
+            class="btn red"
+            onclick="removeOrder('${item.id}')">
+
+            Hapus Pesanan
+
+          </button>
+
+        </div>
+
+      `;
+
+    });
+
+  });
 
 }
 
 
-function comingSoon(){
+/* =========================
+   OWNER CHANGE STATUS
+========================= */
 
-  alert("Web nomor 3 belum tersedia. ✨");
+window.changeStatus = async function(id,status){
+
+  if(currentUser.uid !== OWNER_UID){
+    alert("Akses ditolak.");
+    return;
+  }
+
+  await updateDoc(
+    doc(db,"orders",id),
+    {
+      status:status,
+      updatedAt:Date.now()
+    }
+  );
+
+}
+
+
+/* =========================
+   DELETE
+========================= */
+
+window.removeOrder = async function(id){
+
+  if(currentUser.uid !== OWNER_UID){
+    alert("Akses ditolak.");
+    return;
+  }
+
+  if(!confirm("Hapus pesanan ini?"))
+    return;
+
+  await deleteDoc(
+    doc(db,"orders",id)
+  );
+
+}
+
+
+/* =========================
+   SECURITY HTML
+========================= */
+
+function escapeHTML(text){
+
+  return String(text)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
 }
 
