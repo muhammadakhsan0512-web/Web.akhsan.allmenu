@@ -2,878 +2,1483 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SANNN SERVICE</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SANN // Hacker Simulator</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:Arial,sans-serif;
-  background:#080b12;
-  color:#fff;
-  min-height:100vh;
-}
-button,input,select{font:inherit}
-button{cursor:pointer;border:0}
+*{box-sizing:border-box}
 
-.container{
-  width:min(100%,500px);
-  margin:auto;
-  padding:20px;
+html,body{
+    margin:0;
+    min-height:100%;
+    background:#000;
+    color:#00ff66;
+    font-family:"Courier New",monospace;
+}
+
+body{overflow:auto}
+
+canvas{
+    position:fixed;
+    inset:0;
+    z-index:-5;
+}
+
+body:after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:repeating-linear-gradient(
+        0deg,
+        rgba(0,255,80,.025) 0 1px,
+        transparent 1px 4px
+    );
+}
+
+/* LOGIN */
+
+#login{
+    position:fixed;
+    inset:0;
+    z-index:20;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(0,0,0,.94);
+}
+
+.loginBox{
+    width:100%;
+    max-width:480px;
+    padding:28px;
+    border:1px solid #00ff66;
+    background:#000b05;
+    box-shadow:0 0 40px rgba(0,255,100,.2);
 }
 
 .logo{
-  text-align:center;
-  font-size:30px;
-  font-weight:900;
-  margin:20px 0 5px;
+    text-align:center;
+    font-size:25px;
+    font-weight:bold;
+    text-shadow:0 0 15px #00ff66;
 }
+
 .sub{
-  text-align:center;
-  color:#8992a5;
-  margin-bottom:25px;
+    text-align:center;
+    color:#4d8d61;
+    font-size:10px;
+    margin:8px 0 25px;
 }
 
-.card{
-  background:#111722;
-  border:1px solid #202938;
-  border-radius:18px;
-  padding:20px;
-  margin-bottom:15px;
-  box-shadow:0 10px 30px #0005;
+input{
+    width:100%;
+    padding:14px;
+    background:#000;
+    border:1px solid #075d2c;
+    color:#00ff66;
+    outline:none;
+    font-family:inherit;
+    text-transform:uppercase;
 }
 
-h2{margin-bottom:15px}
-
-input,select{
-  width:100%;
-  padding:14px;
-  margin:7px 0;
-  background:#090d15;
-  border:1px solid #293346;
-  color:white;
-  border-radius:12px;
-  outline:none;
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    background:#001b0b;
+    color:#00ff66;
+    border:1px solid #00ff66;
+    font-family:inherit;
+    cursor:pointer;
 }
 
-input:focus,select:focus{
-  border-color:#6c7cff;
+button:hover{
+    background:#003817;
+    box-shadow:0 0 15px #00ff66;
 }
 
-.btn{
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  background:#5865f2;
-  color:#fff;
-  font-weight:bold;
-  margin-top:10px;
-}
-.btn:hover{filter:brightness(1.1)}
-
-.btn.red{background:#e5484d}
-.btn.green{background:#20a464}
-.btn.gray{background:#293346}
-
-.hidden{display:none!important}
-
-.service{
-  padding:16px;
-  background:#0c111b;
-  border:1px solid #273144;
-  border-radius:15px;
-  margin:10px 0;
+#loginMsg{
+    text-align:center;
+    margin-top:12px;
+    font-size:11px;
 }
 
-.service b{
-  display:block;
-  font-size:17px;
-  margin-bottom:5px;
+/* APP */
+
+#app{
+    display:none;
+    min-height:100vh;
 }
 
-.price{
-  color:#7f91ff;
-  font-weight:bold;
+header{
+    height:60px;
+    padding:0 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #075d2c;
+    background:rgba(0,8,4,.97);
+    position:sticky;
+    top:0;
+    z-index:5;
 }
 
-.order{
-  background:#0b1019;
-  border:1px solid #293346;
-  border-radius:15px;
-  padding:15px;
-  margin:10px 0;
+.brand{
+    font-weight:bold;
+    text-shadow:0 0 10px #00ff66;
 }
 
 .status{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:8px;
-  font-size:12px;
-  margin-top:8px;
-  background:#755b00;
+    font-size:10px;
 }
 
-.status.proses{background:#234d91}
-.status.selesai{background:#17683f}
-
-.nav{
-  display:flex;
-  gap:8px;
-  margin-bottom:15px;
+.dot{
+    display:inline-block;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#00ff66;
+    box-shadow:0 0 10px #00ff66;
 }
 
-.nav button{
-  flex:1;
-  padding:11px;
-  border-radius:10px;
-  background:#171e2b;
-  color:white;
+/* MENU KANAN ATAS */
+
+.topMenu{
+    position:relative;
 }
 
-.small{
-  color:#8e98aa;
-  font-size:13px;
+.topDots{
+    width:42px;
+    height:38px;
+    padding:0;
+    margin:0;
+    font-size:23px;
 }
 
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:15px;
+.topOptions{
+    display:none;
+    position:absolute;
+    right:0;
+    top:47px;
+    width:230px;
+    background:#000b05;
+    border:1px solid #00ff66;
+    box-shadow:0 0 20px rgba(0,255,100,.25);
 }
 
-.badge{
-  background:#1c2637;
-  padding:7px 10px;
-  border-radius:9px;
-  font-size:12px;
+.topOption{
+    padding:14px;
+    border-bottom:1px solid #073c20;
+    font-size:10px;
+    cursor:pointer;
+}
+
+.topOption:last-child{
+    border:0;
+}
+
+.topOption:hover{
+    background:#003817;
+}
+
+/* LAYOUT */
+
+.layout{
+    min-height:calc(100vh - 60px);
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:10px;
+    padding:10px;
+}
+
+.sidebar{
+    border:1px solid #075d2c;
+    background:rgba(0,10,5,.88);
+    padding:13px;
+    height:max-content;
+}
+
+.sidebar h3{
+    font-size:12px;
+    margin-top:0;
+}
+
+.info{
+    border:1px solid #073c20;
+    padding:10px;
+    margin-bottom:10px;
+    color:#57936b;
+    font-size:10px;
+    line-height:1.8;
+}
+
+/* TERMINAL */
+
+.terminal{
+    border:1px solid #075d2c;
+    background:rgba(0,5,2,.95);
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+}
+
+.termHead{
+    padding:10px 12px;
+    border-bottom:1px solid #075d2c;
+    font-size:11px;
+    color:#61a978;
+}
+
+.termHead span{
+    float:right;
+    color:#315e40;
+}
+
+.output{
+    height:650px;
+    overflow-y:auto;
+    padding:14px;
+    font-size:11px;
+    line-height:1.7;
+}
+
+.output::-webkit-scrollbar{
+    width:6px;
+}
+
+.output::-webkit-scrollbar-track{
+    background:#001108;
+}
+
+.output::-webkit-scrollbar-thumb{
+    background:#075d2c;
+}
+
+.line{
+    white-space:pre-wrap;
+    animation:appear .08s ease;
+}
+
+@keyframes appear{
+    from{opacity:0}
+    to{opacity:1}
+}
+
+.green{color:#00ff66}
+.cyan{color:#00eaff}
+.yellow{color:#dfff00}
+.red{color:#ff3838}
+.dim{color:#39784e}
+.white{color:#baffca}
+
+/* PROGRESS */
+
+.bottom{
+    padding:11px;
+    border-top:1px solid #075d2c;
+}
+
+.progressInfo{
+    display:flex;
+    justify-content:space-between;
+    font-size:10px;
+    margin-bottom:6px;
+}
+
+.progress{
+    height:7px;
+    border:1px solid #075d2c;
+    background:#061f11;
+}
+
+.bar{
+    height:100%;
+    width:0%;
+    background:#00ff66;
+    box-shadow:0 0 12px #00ff66;
+    transition:.12s;
+}
+
+/* MENU MISI */
+
+.missionMenu{
+    display:none;
+    padding:10px;
+    border-top:1px solid #075d2c;
+}
+
+.missionDots{
+    width:45px;
+    height:38px;
+    margin-left:auto;
+    font-size:22px;
+    padding:0;
+}
+
+.missionOptions{
+    display:none;
+    position:relative;
+    margin-left:auto;
+    width:230px;
+    background:#000b05;
+    border:1px solid #00ff66;
+}
+
+.missionOption{
+    padding:14px;
+    border-bottom:1px solid #073c20;
+    font-size:10px;
+    cursor:pointer;
+}
+
+.missionOption:last-child{
+    border:0;
+}
+
+.missionOption:hover{
+    background:#003817;
+}
+
+/* SUCCESS */
+
+#success{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:30;
+    align-items:center;
+    justify-content:center;
+    background:#000;
+    text-align:center;
+}
+
+.successTitle{
+    font-size:40px;
+    font-weight:bold;
+    color:#00ff66;
+    text-shadow:
+        0 0 10px #00ff66,
+        0 0 30px #00ff66;
+}
+
+.successSub{
+    margin-top:14px;
+    color:#579d6d;
+    font-size:11px;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+    .layout{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    .output{
+        height:calc(100vh - 190px);
+        min-height:500px;
+        font-size:10px;
+    }
+
+    .brand{
+        font-size:12px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<canvas id="matrix"></canvas>
 
-  <!-- AUTH -->
-  <section id="auth">
+<!-- LOGIN -->
 
-    <div class="logo">⚡ SANNN SERVICE</div>
-    <div class="sub">Joki AFK • Service</div>
+<div id="login">
 
-    <div class="card" id="loginBox">
-      <h2>🔐 Login</h2>
+<div class="loginBox">
 
-      <input id="loginEmail" type="email" placeholder="Email">
-      <input id="loginPass" type="password" placeholder="Password">
+<div class="logo">
+SANN // SECRET TERMINAL
+</div>
 
-      <button class="btn" onclick="login()">LOGIN</button>
+<div class="sub">
+CLASSIFIED VIRTUAL ENVIRONMENT
+</div>
 
-      <button class="btn gray" onclick="showRegister()">
-        Belum punya akun? Daftar
-      </button>
-    </div>
+<div style="font-size:11px">
+ENTER SECRET CODE
+</div>
 
-    <div class="card hidden" id="registerBox">
-      <h2>📝 Daftar Akun</h2>
+<input
+id="codeInput"
+placeholder="SANN-XXXX-XXXX"
+autocomplete="off">
 
-      <input id="regName" placeholder="Nama / Username">
-      <input id="regEmail" type="email" placeholder="Email">
-      <input id="regPass" type="password" placeholder="Password">
+<button onclick="activate()">
+[ ENTER SECRET CODE ]
+</button>
 
-      <button class="btn green" onclick="register()">
-        DAFTAR
-      </button>
+<div id="loginMsg"></div>
 
-      <button class="btn gray" onclick="showLogin()">
-        Sudah punya akun? Login
-      </button>
-    </div>
+<div style="
+text-align:center;
+font-size:9px;
+color:#444;
+margin-top:18px;">
+FICTIONAL SIMULATOR — NO REAL SYSTEM ACCESS
+</div>
 
-  </section>
-
-
-  <!-- CUSTOMER -->
-  <section id="customer" class="hidden">
-
-    <div class="top">
-      <div>
-        <b>⚡ SANNN SERVICE</b>
-        <div class="small" id="customerName"></div>
-      </div>
-
-      <button class="btn red" style="width:auto;margin:0;padding:9px 12px"
-        onclick="logout()">Keluar</button>
-    </div>
-
-    <div class="nav">
-      <button onclick="customerPage('services')">🛒 Pesan</button>
-      <button onclick="customerPage('history')">📋 Pesanan</button>
-    </div>
+</div>
+</div>
 
 
-    <!-- SERVICES -->
-    <div id="servicesPage">
+<!-- APP -->
 
-      <div class="card">
-        <h2>🎮 Joki AFK</h2>
+<div id="app">
 
-        <div class="service">
-          <b>1 Jam</b>
-          <span class="price">Rp1.000</span>
-        </div>
+<header>
 
-        <div class="service">
-          <b>3 Jam</b>
-          <span class="price">Rp2.500</span>
-        </div>
+<div class="brand">
+SANN//CYBER TERMINAL
+</div>
 
-        <div class="service">
-          <b>5 Jam</b>
-          <span class="price">Rp4.000</span>
-        </div>
+<div style="display:flex;align-items:center;gap:15px">
 
-        <div class="service">
-          <b>10 Jam</b>
-          <span class="price">Rp7.000</span>
-        </div>
+<div class="status">
+<span class="dot"></span>
+SIMULATION ONLINE
+</div>
 
-        <div class="service">
-          <b>12 Jam</b>
-          <span class="price">Rp8.000</span>
-        </div>
+<!-- TITIK TIGA ATAS KANAN -->
 
-        <div class="service">
-          <b>24 Jam</b>
-          <span class="price">Rp12.000</span>
-        </div>
+<div class="topMenu" id="topMenu">
 
-        <select id="afkPackage">
-          <option value="1 Jam|1000">1 Jam — Rp1.000</option>
-          <option value="3 Jam|2500">3 Jam — Rp2.500</option>
-          <option value="5 Jam|4000">5 Jam — Rp4.000</option>
-          <option value="10 Jam|7000">10 Jam — Rp7.000</option>
-          <option value="12 Jam|8000">12 Jam — Rp8.000</option>
-          <option value="24 Jam|12000">24 Jam — Rp12.000</option>
-        </select>
+<button
+class="topDots"
+onclick="toggleTopMenu()">
+⋮
+</button>
 
-        <input id="afkTarget" placeholder="Username / detail pesanan">
+<div class="topOptions" id="topOptions">
 
-        <button class="btn" onclick="orderAFK()">
-          PESAN JOKI AFK
-        </button>
-      </div>
+<div
+class="topOption"
+onclick="secretCodeLain()">
+🔐 SECRET CODE LAIN
+</div>
 
+<div
+class="topOption"
+onclick="kunciHasilHack()">
+🔑 KUNCI HASIL HACK
+</div>
 
-      <div class="card">
-        <h2>📱 Service Follower / CH</h2>
+<div
+class="topOption"
+onclick="stopAll()">
+🛑 HENTIKAN SEMUA
+</div>
 
-        <div class="service">
-          <b>100 Followers</b>
-          <span class="price">Rp600</span>
-        </div>
+</div>
 
-        <div class="service">
-          <b>500 Followers</b>
-          <span class="price">Rp3.000</span>
-        </div>
+</div>
 
-        <div class="service">
-          <b>1.000 Followers</b>
-          <span class="price">Rp6.700</span>
-        </div>
+</div>
 
-        <select id="followPackage">
-          <option value="100 Followers|600">100 Followers — Rp600</option>
-          <option value="500 Followers|3000">500 Followers — Rp3.000</option>
-          <option value="1000 Followers|6700">1.000 Followers — Rp6.700</option>
-        </select>
-
-        <input id="followTarget" placeholder="Username / link">
-
-        <button class="btn" onclick="orderFollower()">
-          BUAT PESANAN
-        </button>
-      </div>
-
-    </div>
+</header>
 
 
-    <!-- HISTORY -->
-    <div id="historyPage" class="hidden">
+<div class="layout">
 
-      <div class="card">
-        <h2>📋 Pesanan Saya</h2>
-        <div id="myOrders"></div>
-      </div>
+<aside class="sidebar">
 
-    </div>
+<h3>MISSION CONTROL</h3>
 
-  </section>
+<div class="info">
+OPERATOR : SANN<br>
+MODE : SIMULATION<br>
+NETWORK : VIRTUAL<br>
+ACCESS : NONE
+</div>
+
+<div class="info">
+MISSION<br>
+<span id="missionName">---</span>
+</div>
+
+<div class="info">
+STATUS<br>
+<span id="statusText">WAITING</span>
+</div>
+
+<div class="info">
+HACK KEY<br>
+<span id="hackKeySide">NOT GENERATED</span>
+</div>
+
+</aside>
 
 
-  <!-- OWNER -->
-  <section id="owner" class="hidden">
+<section class="terminal">
 
-    <div class="top">
-      <div>
-        <b>👑 OWNER PANEL</b>
-        <div class="small">SANNN SERVICE</div>
-      </div>
+<div class="termHead">
+root@sann:~/classified
+<span>● ● ●</span>
+</div>
 
-      <button class="btn red" style="width:auto;margin:0;padding:9px 12px"
-        onclick="logout()">Keluar</button>
-    </div>
+<div class="output" id="output"></div>
 
-    <div class="card">
-      <h2>📊 Statistik</h2>
+<div class="bottom">
 
-      <p>Pesanan: <b id="totalOrders">0</b></p>
-      <p style="margin-top:8px">
-        User terdaftar: <b id="totalUsers">-</b>
-      </p>
-    </div>
+<div class="progressInfo">
+<span id="stage">WAITING</span>
+<span id="percent">0%</span>
+</div>
 
-    <div class="card">
-      <h2>📦 Semua Pesanan</h2>
-      <div id="allOrders"></div>
-    </div>
-
-  </section>
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
 
 </div>
 
 
-<!-- FIREBASE -->
-<script type="module">
+<!-- TITIK TIGA SETELAH 100% -->
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+<div
+class="missionMenu"
+id="missionMenu">
 
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-}
-from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+<button
+class="missionDots"
+onclick="toggleMissionMenu()">
+⋮
+</button>
 
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  doc,
-  setDoc,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-  onSnapshot,
-  query,
-  orderBy
-}
-from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+<div
+class="missionOptions"
+id="missionOptions">
 
+<div
+class="missionOption"
+onclick="destroyMission()">
+💥 HANCURKAN MISI
+</div>
 
-/* =====================================
-   GANTI DENGAN CONFIG FIREBASE KAMU
-===================================== */
+<div
+class="missionOption"
+onclick="addKey()">
+🔑 TAMBAHKAN KUNCI
+</div>
 
-const firebaseConfig = {
-  apiKey: "MASUKKAN_API_KEY",
-  authDomain: "PROJECT-KAMU.firebaseapp.com",
-  projectId: "PROJECT-KAMU",
-  storageBucket: "PROJECT-KAMU.firebasestorage.app",
-  messagingSenderId: "MASUKKAN_ID",
-  appId: "MASUKKAN_APP_ID"
-};
+<div
+class="missionOption"
+onclick="continueHack()">
+⚡ LANJUT HACK
+</div>
 
+</div>
 
-/* ===================================== */
+</div>
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+</section>
+
+</div>
+</div>
 
 
-/*
-  Masukkan UID akun owner kamu di sini.
+<!-- SUCCESS -->
 
-  Caranya:
-  1. Buat akun owner melalui Firebase Authentication
-  2. Login sekali
-  3. Lihat UID akun tersebut
-  4. Masukkan UID ke OWNER_UID
-*/
+<div id="success">
 
-const OWNER_UID = "ISI_UID_OWNER";
+<div>
+
+<div class="successTitle">
+HACK SUCCESS
+</div>
+
+<div class="successSub">
+VIRTUAL OPERATION COMPLETED
+</div>
+
+<div
+id="successCode"
+style="
+margin-top:20px;
+font-size:10px;
+color:#39784e;">
+</div>
+
+</div>
+
+</div>
 
 
-let currentUser = null;
+<script>
 
+/* MATRIX */
 
-/* =========================
-   UI
-========================= */
+const canvas=
+document.getElementById("matrix");
 
-window.showRegister = function(){
-  loginBox.classList.add("hidden");
-  registerBox.classList.remove("hidden");
-}
+const ctx=
+canvas.getContext("2d");
 
-window.showLogin = function(){
-  registerBox.classList.add("hidden");
-  loginBox.classList.remove("hidden");
-}
+let drops=[];
 
-window.customerPage = function(page){
+function resize(){
 
-  servicesPage.classList.toggle(
-    "hidden",
-    page !== "services"
-  );
+canvas.width=innerWidth;
+canvas.height=innerHeight;
 
-  historyPage.classList.toggle(
-    "hidden",
-    page !== "history"
-  );
+drops=
+Array(
+Math.floor(innerWidth/14)
+).fill(1);
 
-  if(page === "history"){
-    loadMyOrders();
-  }
 }
 
+resize();
 
-/* =========================
-   REGISTER
-========================= */
+addEventListener("resize",resize);
 
-window.register = async function(){
+const chars=
+"01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&<>[]{}";
 
-  const name = regName.value.trim();
-  const email = regEmail.value.trim();
-  const pass = regPass.value;
+function matrix(){
 
-  if(!name || !email || !pass){
-    alert("Lengkapi semua data.");
-    return;
-  }
+ctx.fillStyle="rgba(0,0,0,.08)";
+ctx.fillRect(
+0,0,
+canvas.width,
+canvas.height
+);
 
-  if(pass.length < 6){
-    alert("Password minimal 6 karakter.");
-    return;
-  }
+ctx.fillStyle="#00ff66";
+ctx.font="14px monospace";
 
-  try{
+drops.forEach((y,i)=>{
 
-    const result =
-      await createUserWithEmailAndPassword(
-        auth,
-        email,
-        pass
-      );
+const c=
+chars[
+Math.floor(
+Math.random()*chars.length
+)];
 
-    await setDoc(
-      doc(db,"users",result.user.uid),
-      {
-        name:name,
-        email:email,
-        role:"customer",
-        createdAt:Date.now()
-      }
-    );
+ctx.fillText(c,i*14,y*14);
 
-    alert("Pendaftaran berhasil!");
-
-  }catch(error){
-    alert(error.message);
-  }
+if(
+y*14>canvas.height &&
+Math.random()>.975
+){
+drops[i]=0;
 }
 
-
-/* =========================
-   LOGIN
-========================= */
-
-window.login = async function(){
-
-  const email = loginEmail.value.trim();
-  const pass = loginPass.value;
-
-  if(!email || !pass){
-    alert("Masukkan email dan password.");
-    return;
-  }
-
-  try{
-
-    await signInWithEmailAndPassword(
-      auth,
-      email,
-      pass
-    );
-
-  }catch(error){
-    alert("Login gagal: " + error.message);
-  }
-}
-
-
-/* =========================
-   AUTH STATE
-========================= */
-
-onAuthStateChanged(auth,async(user)=>{
-
-  currentUser = user;
-
-  auth.classList.toggle("hidden",!!user);
-  customer.classList.add("hidden");
-  owner.classList.add("hidden");
-
-  if(!user) return;
-
-
-  if(user.uid === OWNER_UID){
-
-    owner.classList.remove("hidden");
-    loadAllOrders();
-
-  }else{
-
-    customer.classList.remove("hidden");
-
-    const snap =
-      await getDoc(
-        doc(db,"users",user.uid)
-      );
-
-    if(snap.exists()){
-
-      customerName.textContent =
-        "👤 " + snap.data().name;
-
-    }else{
-
-      customerName.textContent =
-        user.email;
-
-    }
-  }
+drops[i]++;
 
 });
+}
+
+setInterval(matrix,40);
 
 
-/* =========================
-   LOGOUT
-========================= */
+/* SECRET CODES */
 
-window.logout = function(){
-  signOut(auth);
+const codes={
+
+"SANN-X7K9-2048":"NIGHTFALL",
+"NEXUS-91A7-CORE":"NEXUS",
+"SHADOW-4F82-ZX":"SHADOW",
+"BLACKOUT-77Q1":"BLACKOUT",
+"GHOST-AX19-5K":"GHOST",
+"CYBER-08M4-NOVA":"NOVA",
+"VOID-7319-ALPHA":"VOID",
+"PHANTOM-X92K":"PHANTOM",
+"MATRIX-5D71-SANN":"MATRIX",
+"ZERO-ACCESS-482":"ZERO",
+"NIGHT-3F90-CORE":"NIGHT",
+"ECHO-77AX-19":"ECHO",
+"QUANTUM-204-X":"QUANTUM",
+"DARKNET-61P8":"DARKNET",
+"OMEGA-SANN-999":"OMEGA"
+
+};
+
+const output=
+document.getElementById("output");
+
+let mission="";
+let running=false;
+let destroyed=false;
+let hackKey="";
+
+
+/* HELPERS */
+
+function wait(ms){
+    return new Promise(r=>setTimeout(r,ms));
+}
+
+function hex(n){
+
+    const c="0123456789ABCDEF";
+    let x="";
+
+    for(let i=0;i<n;i++)
+        x+=c[Math.floor(Math.random()*16)];
+
+    return x;
+}
+
+function print(text,cls="dim"){
+
+    const d=
+    document.createElement("div");
+
+    d.className="line "+cls;
+    d.textContent=text;
+
+    output.appendChild(d);
+
+    output.scrollTop=
+    output.scrollHeight;
 }
 
 
-/* =========================
-   ORDER AFK
-========================= */
+/* LOGIN */
 
-window.orderAFK = async function(){
+function activate(){
 
-  const data =
-    afkPackage.value.split("|");
+    const value=
+    document
+    .getElementById("codeInput")
+    .value
+    .trim()
+    .toUpperCase();
 
-  const target =
-    afkTarget.value.trim();
+    const msg=
+    document.getElementById("loginMsg");
 
-  if(!target){
-    alert("Masukkan username/detail pesanan.");
-    return;
-  }
+    if(!codes[value]){
 
-  try{
+        msg.textContent=
+        "ACCESS DENIED // INVALID SECRET CODE";
 
-    await addDoc(
-      collection(db,"orders"),
-      {
-        userId:currentUser.uid,
-        email:currentUser.email,
-        service:"Joki AFK",
-        package:data[0],
-        price:Number(data[1]),
-        target:target,
-        status:"Menunggu",
-        createdAt:Date.now()
-      }
-    );
+        msg.style.color="#ff3838";
 
-    afkTarget.value="";
-
-    alert("Pesanan berhasil dikirim ke owner!");
-
-  }catch(error){
-
-    alert(error.message);
-
-  }
-}
-
-
-/* =========================
-   ORDER FOLLOWER
-========================= */
-
-window.orderFollower = async function(){
-
-  const data =
-    followPackage.value.split("|");
-
-  const target =
-    followTarget.value.trim();
-
-  if(!target){
-    alert("Masukkan username/link.");
-    return;
-  }
-
-  try{
-
-    await addDoc(
-      collection(db,"orders"),
-      {
-        userId:currentUser.uid,
-        email:currentUser.email,
-        service:"Service Follower / CH",
-        package:data[0],
-        price:Number(data[1]),
-        target:target,
-        status:"Menunggu",
-        createdAt:Date.now()
-      }
-    );
-
-    followTarget.value="";
-
-    alert("Pesanan berhasil dikirim ke owner!");
-
-  }catch(error){
-
-    alert(error.message);
-
-  }
-}
-
-
-/* =========================
-   CUSTOMER ORDERS
-========================= */
-
-function loadMyOrders(){
-
-  const q =
-    query(
-      collection(db,"orders"),
-      orderBy("createdAt","desc")
-    );
-
-  onSnapshot(q,(snapshot)=>{
-
-    myOrders.innerHTML="";
-
-    snapshot.forEach(item=>{
-
-      const d=item.data();
-
-      if(d.userId !== currentUser.uid)
         return;
-
-      let cls="";
-
-      if(d.status==="Diproses")
-        cls="proses";
-
-      if(d.status==="Selesai")
-        cls="selesai";
-
-      myOrders.innerHTML += `
-
-        <div class="order">
-
-          <b>${escapeHTML(d.service)}</b>
-
-          <p style="margin-top:7px">
-            ${escapeHTML(d.package)}
-          </p>
-
-          <p class="small">
-            Target: ${escapeHTML(d.target)}
-          </p>
-
-          <p style="margin-top:7px">
-            Rp${Number(d.price).toLocaleString("id-ID")}
-          </p>
-
-          <span class="status ${cls}">
-            ${escapeHTML(d.status)}
-          </span>
-
-        </div>
-
-      `;
-
-    });
-
-  });
-
-}
-
-
-/* =========================
-   OWNER ORDERS
-========================= */
-
-function loadAllOrders(){
-
-  const q =
-    query(
-      collection(db,"orders"),
-      orderBy("createdAt","desc")
-    );
-
-  onSnapshot(q,(snapshot)=>{
-
-    allOrders.innerHTML="";
-    totalOrders.textContent=snapshot.size;
-
-    snapshot.forEach(item=>{
-
-      const d=item.data();
-
-      let cls="";
-
-      if(d.status==="Diproses")
-        cls="proses";
-
-      if(d.status==="Selesai")
-        cls="selesai";
-
-      allOrders.innerHTML += `
-
-        <div class="order">
-
-          <b>${escapeHTML(d.service)}</b>
-
-          <p>${escapeHTML(d.package)}</p>
-
-          <p class="small">
-            Customer: ${escapeHTML(d.email)}
-          </p>
-
-          <p class="small">
-            Target: ${escapeHTML(d.target)}
-          </p>
-
-          <p style="margin-top:7px">
-            Rp${Number(d.price).toLocaleString("id-ID")}
-          </p>
-
-          <span class="status ${cls}">
-            ${escapeHTML(d.status)}
-          </span>
-
-          <select
-            onchange="changeStatus('${item.id}',this.value)"
-            style="margin-top:10px">
-
-            <option ${d.status==="Menunggu"?"selected":""}>
-              Menunggu
-            </option>
-
-            <option ${d.status==="Diproses"?"selected":""}>
-              Diproses
-            </option>
-
-            <option ${d.status==="Selesai"?"selected":""}>
-              Selesai
-            </option>
-
-          </select>
-
-          <button
-            class="btn red"
-            onclick="removeOrder('${item.id}')">
-
-            Hapus Pesanan
-
-          </button>
-
-        </div>
-
-      `;
-
-    });
-
-  });
-
-}
-
-
-/* =========================
-   OWNER CHANGE STATUS
-========================= */
-
-window.changeStatus = async function(id,status){
-
-  if(currentUser.uid !== OWNER_UID){
-    alert("Akses ditolak.");
-    return;
-  }
-
-  await updateDoc(
-    doc(db,"orders",id),
-    {
-      status:status,
-      updatedAt:Date.now()
     }
-  );
+
+    mission=codes[value];
+
+    document
+    .getElementById("login")
+    .style.display="none";
+
+    document
+    .getElementById("app")
+    .style.display="block";
+
+    document
+    .getElementById("missionName")
+    .textContent=
+    "OPERATION "+mission;
+
+    startMission();
+}
+
+
+/* START */
+
+async function startMission(){
+
+    running=true;
+    destroyed=false;
+
+    output.innerHTML="";
+
+    print(
+    "╔══════════════════════════════════════╗",
+    "cyan");
+
+    print(
+    "║       CLASSIFIED MISSION START      ║",
+    "cyan");
+
+    print(
+    "╚══════════════════════════════════════╝",
+    "cyan");
+
+    await wait(400);
+
+    print(
+    "> SECRET CODE ACCEPTED",
+    "green");
+
+    await wait(300);
+
+    print(
+    "> OPERATION : "+mission,
+    "yellow");
+
+    await wait(300);
+
+    print(
+    "> Initializing virtual environment...",
+    "dim");
+
+    await wait(500);
+
+    print(
+    "[OK] Virtual kernel loaded",
+    "green");
+
+    await wait(300);
+
+    print(
+    "[OK] Simulation security active",
+    "green");
+
+    await runMainMission();
+}
+
+
+/* MAIN MISSION 0-100 */
+
+async function runMainMission(){
+
+    const stages=[
+
+        ["INITIALIZING CORE",20],
+        ["GENERATING VIRTUAL TARGET",25],
+        ["BUILDING SIMULATED CONNECTION",30],
+        ["PROCESSING VIRTUAL DATA",35],
+        ["DECRYPTING VISUAL CONTENT",40],
+        ["VERIFYING VIRTUAL ACCESS",35],
+        ["RUNNING FINAL PROTOCOL",35],
+        ["FINALIZING MISSION",20]
+
+    ];
+
+    const total=
+    stages.reduce((a,b)=>a+b[1],0);
+
+    let current=0;
+
+    for(const s of stages){
+
+        if(destroyed)return;
+
+        document
+        .getElementById("stage")
+        .textContent=s[0];
+
+        for(let i=0;i<s[1];i++){
+
+            if(destroyed)return;
+
+            current++;
+
+            const p=
+            Math.floor(current/total*100);
+
+            setProgress(p);
+
+            fakeLog(p);
+
+            await wait(
+                Math.random()*130+60
+            );
+        }
+    }
+
+    running=false;
+
+    document
+    .getElementById("stage")
+    .textContent=
+    "MISSION COMPLETE";
+
+    document
+    .getElementById("statusText")
+    .textContent=
+    "100% COMPLETE";
+
+    print("");
+    print(
+    "══════════════════════════════════════",
+    "green");
+
+    print(
+    "[100%] MISSION COMPLETE",
+    "green");
+
+    print(
+    "> Mission waiting for command.",
+    "cyan");
+
+    print(
+    "> Open ⋮ for available actions.",
+    "yellow");
+
+    document
+    .getElementById("missionMenu")
+    .style.display="block";
+}
+
+
+/* PROGRESS */
+
+function setProgress(p){
+
+    document
+    .getElementById("bar")
+    .style.width=p+"%";
+
+    document
+    .getElementById("percent")
+    .textContent=p+"%";
+}
+
+
+/* FAKE LOG */
+
+function fakeLog(p){
+
+    const logs=[
+
+    "Generating virtual packet...",
+    "Analyzing simulated node...",
+    "Creating artificial handshake...",
+    "Checking fictional checksum...",
+    "Rotating virtual key...",
+    "Processing virtual buffer...",
+    "Generating random hash...",
+    "Updating virtual process...",
+    "Rendering encrypted visual...",
+    "Synchronizing virtual node...",
+    "Verifying simulated response...",
+    "Refreshing terminal stream...",
+    "Creating temporary session...",
+    "Parsing virtual structure...",
+    "Updating mission protocol...",
+    "Simulating data transfer...",
+    "Checking virtual integrity...",
+    "Preparing next layer...",
+    "Loading artificial module..."
+
+    ];
+
+    const action=
+    logs[
+    Math.floor(
+    Math.random()*logs.length)];
+
+    const formats=[
+
+    `> ${action} [${p}%]`,
+    `> PACKET ${hex(10)} :: SIMULATED`,
+    `> HASH ${hex(16)} :: VERIFIED`,
+    `> KEY ${hex(18)} :: ROTATED`,
+    `> SESSION ${hex(12)} :: ACTIVE`,
+    `> PROCESS ${hex(7)} :: RUNNING`,
+    `> BUFFER ${hex(8)} :: ${p}%`,
+    `> VIRTUAL NODE ${hex(6)} :: ONLINE`
+
+    ];
+
+    print(
+    formats[
+    Math.floor(
+    Math.random()*formats.length)],
+    Math.random()>.82
+    ?"cyan"
+    :"dim");
+}
+
+
+/* MISSION MENU */
+
+function toggleMissionMenu(){
+
+    const m=
+    document.getElementById("missionOptions");
+
+    m.style.display=
+    m.style.display==="block"
+    ?"none"
+    :"block";
+}
+
+
+/* DESTROY */
+
+async function destroyMission(){
+
+    document
+    .getElementById("missionOptions")
+    .style.display="none";
+
+    destroyed=true;
+    running=false;
+
+    document
+    .getElementById("stage")
+    .textContent=
+    "MISSION DESTROY";
+
+    document
+    .getElementById("statusText")
+    .textContent=
+    "ERROR";
+
+    print("");
+    print(
+    "!!! DESTROY PROTOCOL ACTIVATED !!!",
+    "red");
+
+    await wait(300);
+
+    /* SPAM ERROR */
+
+    for(let i=0;i<180;i++){
+
+        const type=
+        Math.floor(Math.random()*7);
+
+        if(type===0){
+
+            print(
+            "CONTENT ERROR :: "+
+            hex(8)+
+            " :: FILE NOT FOUND",
+            "red");
+
+        }else if(type===1){
+
+            print(
+            "CONTENT DELETE :: "+
+            hex(12)+
+            " :: DELETED",
+            "red");
+
+        }else if(type===2){
+
+            print(
+            "ERROR 0x"+
+            hex(8)+
+            " :: CONTENT CORRUPTED",
+            "red");
+
+        }else if(type===3){
+
+            print(
+            "SYSTEM ERROR :: "+
+            hex(10)+
+            " :: FAILED",
+            "red");
+
+        }else if(type===4){
+
+            print(
+            "DELETE PROCESS :: "+
+            hex(10)+
+            " :: PURGED",
+            "yellow");
+
+        }else if(type===5){
+
+            print(
+            "CONTENT ERROR :: BUFFER "+
+            hex(6)+
+            " :: EMPTY",
+            "red");
+
+        }else{
+
+            print(
+            "VIRTUAL FILE "+
+            hex(10)+
+            " :: REMOVED",
+            "red");
+        }
+
+        await wait(
+        Math.random()*18+8);
+    }
+
+    print("");
+    print(
+    "!!! MISSION CONTENT DESTROYED !!!",
+    "red");
+
+    await wait(1000);
+
+    resetToLogin();
+}
+
+
+/* ADD KEY */
+
+async function addKey(){
+
+    document
+    .getElementById("missionOptions")
+    .style.display="none";
+
+    print("");
+    print(
+    "> KEY GENERATION STARTED",
+    "cyan");
+
+    await wait(500);
+
+    hackKey=
+    "SANN-"+hex(5)+
+    "-"+hex(5)+
+    "-"+hex(5);
+
+    print(
+    "> Generating hack result key...",
+    "dim");
+
+    await wait(600);
+
+    print(
+    "> KEY CREATED : "+hackKey,
+    "green");
+
+    document
+    .getElementById("hackKeySide")
+    .textContent=
+    hackKey;
+
+    print(
+    "> KEY SAVED TO SECRET ACCESS",
+    "green");
+
+    print(
+    "> New options are now available in ⋮ above.",
+    "yellow");
+}
+
+
+/* CONTINUE HACK */
+
+async function continueHack(){
+
+    document
+    .getElementById("missionOptions")
+    .style.display="none";
+
+    if(running)return;
+
+    running=true;
+
+    print("");
+    print(
+    ">>> CONTINUING HACK SIMULATION <<<",
+    "cyan");
+
+    await wait(400);
+
+    for(let i=0;i<=100;i++){
+
+        if(destroyed)return;
+
+        setProgress(i);
+
+        document
+        .getElementById("stage")
+        .textContent=
+        "CONTINUING HACK";
+
+        fakeLog(i);
+
+        await wait(
+        Math.random()*70+40);
+    }
+
+    running=false;
+
+    print("");
+    print(
+    "[100%] CONTINUE HACK COMPLETE",
+    "green");
+
+    print(
+    "> Open ⋮ for another action.",
+    "yellow");
+}
+
+
+/* TOP MENU */
+
+function toggleTopMenu(){
+
+    const menu=
+    document.getElementById("topOptions");
+
+    menu.style.display=
+    menu.style.display==="block"
+    ?"none"
+    :"block";
+}
+
+
+/* SECRET CODE LAIN */
+
+function secretCodeLain(){
+
+    document
+    .getElementById("topOptions")
+    .style.display="none";
+
+    resetToLogin();
+}
+
+
+/* KUNCI HASIL HACK */
+
+async function kunciHasilHack(){
+
+    document
+    .getElementById("topOptions")
+    .style.display="none";
+
+    if(!hackKey){
+
+        print("");
+        print(
+        "> ERROR: NO HACK KEY FOUND",
+        "red");
+
+        print(
+        "> Create a key from the mission menu first.",
+        "yellow");
+
+        return;
+    }
+
+    if(running)return;
+
+    running=true;
+
+    print("");
+    print(
+    "╔══════════════════════════════════════╗",
+    "cyan");
+
+    print(
+    "║       HACK KEY AUTHENTICATION       ║",
+    "cyan");
+
+    print(
+    "╚══════════════════════════════════════╝",
+    "cyan");
+
+    await wait(500);
+
+    print(
+    "> KEY : "+hackKey,
+    "green");
+
+    await wait(400);
+
+    print(
+    "> KEY ACCEPTED",
+    "green");
+
+    await wait(400);
+
+    print(
+    "> Starting final virtual hack...",
+    "yellow");
+
+    for(let i=0;i<=100;i++){
+
+        setProgress(i);
+
+        document
+        .getElementById("stage")
+        .textContent=
+        "FINAL HACK";
+
+        const specialLogs=[
+
+        "> Bypassing visual security layer...",
+        "> Processing encrypted simulation...",
+        "> Verifying virtual credentials...",
+        "> Accessing fictional content...",
+        "> Decrypting simulated result...",
+        "> Synchronizing virtual access...",
+        "> Finalizing virtual operation..."
+
+        ];
+
+        print(
+        specialLogs[
+        Math.floor(
+        Math.random()*specialLogs.length)],
+        i>85?"cyan":"dim");
+
+        await wait(
+        Math.random()*70+50);
+    }
+
+    running=false;
+
+    await wait(300);
+
+    hackSuccess();
+}
+
+
+/* HACK SUCCESS */
+
+async function hackSuccess(){
+
+    document
+    .getElementById("stage")
+    .textContent=
+    "HACK SUCCESS";
+
+    setProgress(100);
+
+    print("");
+    print(
+    "══════════════════════════════════════",
+    "green");
+
+    print(
+    "[100%] HACK SUCCESS",
+    "green");
+
+    print(
+    "> SECRET KEY VERIFIED.",
+    "green");
+
+    print(
+    "> VIRTUAL OPERATION COMPLETED.",
+    "white");
+
+    print(
+    "> Returning to initial page...",
+    "cyan");
+
+    await wait(1800);
+
+    document
+    .getElementById("successCode")
+    .textContent=
+    "SIMULATION ID : SANN-"+hex(10);
+
+    document
+    .getElementById("success")
+    .style.display="flex";
+
+    await wait(2500);
+
+    resetToLogin();
+}
+
+
+/* STOP ALL */
+
+function stopAll(){
+
+    document
+    .getElementById("topOptions")
+    .style.display="none";
+
+    running=false;
+    destroyed=true;
+
+    print("");
+    print(
+    "!!! ALL PROCESSES STOPPED !!!",
+    "red");
+
+    print(
+    "> Simulation terminated.",
+    "yellow");
+
+    setTimeout(
+    resetToLogin,
+    1200);
+}
+
+
+/* RESET */
+
+function resetToLogin(){
+
+    running=false;
+    destroyed=true;
+
+    document
+    .getElementById("success")
+    .style.display="none";
+
+    document
+    .getElementById("app")
+    .style.display="none";
+
+    document
+    .getElementById("login")
+    .style.display="flex";
+
+    document
+    .getElementById("codeInput")
+    .value="";
+
+    document
+    .getElementById("loginMsg")
+    .textContent="";
+
+    document
+    .getElementById("missionMenu")
+    .style.display="none";
+
+    document
+    .getElementById("missionOptions")
+    .style.display="none";
+
+    document
+    .getElementById("topOptions")
+    .style.display="none";
+
+    document
+    .getElementById("bar")
+    .style.width="0%";
+
+    document
+    .getElementById("percent")
+    .textContent="0%";
+
+    document
+    .getElementById("stage")
+    .textContent="WAITING";
 
 }
 
 
-/* =========================
-   DELETE
-========================= */
+/* ENTER */
 
-window.removeOrder = async function(id){
-
-  if(currentUser.uid !== OWNER_UID){
-    alert("Akses ditolak.");
-    return;
-  }
-
-  if(!confirm("Hapus pesanan ini?"))
-    return;
-
-  await deleteDoc(
-    doc(db,"orders",id)
-  );
-
-}
-
-
-/* =========================
-   SECURITY HTML
-========================= */
-
-function escapeHTML(text){
-
-  return String(text)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
-}
+document
+.getElementById("codeInput")
+.addEventListener(
+"keydown",
+e=>{
+    if(e.key==="Enter")
+        activate();
+});
 
 </script>
 
