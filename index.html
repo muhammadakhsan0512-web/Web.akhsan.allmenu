@@ -1,1486 +1,284 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>SANN // Hacker Simulator</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card Maker • By Sann</title>
 <style>
 *{box-sizing:border-box}
-
-html,body{
-    margin:0;
-    min-height:100%;
-    background:#000;
-    color:#00ff66;
-    font-family:"Courier New",monospace;
-}
-
-body{overflow:auto}
-
-canvas{
-    position:fixed;
-    inset:0;
-    z-index:-5;
-}
-
-body:after{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    background:repeating-linear-gradient(
-        0deg,
-        rgba(0,255,80,.025) 0 1px,
-        transparent 1px 4px
-    );
-}
-
-/* LOGIN */
-
-#login{
-    position:fixed;
-    inset:0;
-    z-index:20;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    background:rgba(0,0,0,.94);
-}
-
-.loginBox{
-    width:100%;
-    max-width:480px;
-    padding:28px;
-    border:1px solid #00ff66;
-    background:#000b05;
-    box-shadow:0 0 40px rgba(0,255,100,.2);
-}
-
-.logo{
-    text-align:center;
-    font-size:25px;
-    font-weight:bold;
-    text-shadow:0 0 15px #00ff66;
-}
-
-.sub{
-    text-align:center;
-    color:#4d8d61;
-    font-size:10px;
-    margin:8px 0 25px;
-}
-
-input{
-    width:100%;
-    padding:14px;
-    background:#000;
-    border:1px solid #075d2c;
-    color:#00ff66;
-    outline:none;
-    font-family:inherit;
-    text-transform:uppercase;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    background:#001b0b;
-    color:#00ff66;
-    border:1px solid #00ff66;
-    font-family:inherit;
-    cursor:pointer;
-}
-
-button:hover{
-    background:#003817;
-    box-shadow:0 0 15px #00ff66;
-}
-
-#loginMsg{
-    text-align:center;
-    margin-top:12px;
-    font-size:11px;
-}
-
-/* APP */
-
-#app{
-    display:none;
-    min-height:100vh;
-}
-
-header{
-    height:60px;
-    padding:0 16px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:1px solid #075d2c;
-    background:rgba(0,8,4,.97);
-    position:sticky;
-    top:0;
-    z-index:5;
-}
-
-.brand{
-    font-weight:bold;
-    text-shadow:0 0 10px #00ff66;
-}
-
-.status{
-    font-size:10px;
-}
-
-.dot{
-    display:inline-block;
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:#00ff66;
-    box-shadow:0 0 10px #00ff66;
-}
-
-/* MENU KANAN ATAS */
-
-.topMenu{
-    position:relative;
-}
-
-.topDots{
-    width:42px;
-    height:38px;
-    padding:0;
-    margin:0;
-    font-size:23px;
-}
-
-.topOptions{
-    display:none;
-    position:absolute;
-    right:0;
-    top:47px;
-    width:230px;
-    background:#000b05;
-    border:1px solid #00ff66;
-    box-shadow:0 0 20px rgba(0,255,100,.25);
-}
-
-.topOption{
-    padding:14px;
-    border-bottom:1px solid #073c20;
-    font-size:10px;
-    cursor:pointer;
-}
-
-.topOption:last-child{
-    border:0;
-}
-
-.topOption:hover{
-    background:#003817;
-}
-
-/* LAYOUT */
-
-.layout{
-    min-height:calc(100vh - 60px);
-    display:grid;
-    grid-template-columns:220px 1fr;
-    gap:10px;
-    padding:10px;
-}
-
-.sidebar{
-    border:1px solid #075d2c;
-    background:rgba(0,10,5,.88);
-    padding:13px;
-    height:max-content;
-}
-
-.sidebar h3{
-    font-size:12px;
-    margin-top:0;
-}
-
-.info{
-    border:1px solid #073c20;
-    padding:10px;
-    margin-bottom:10px;
-    color:#57936b;
-    font-size:10px;
-    line-height:1.8;
-}
-
-/* TERMINAL */
-
-.terminal{
-    border:1px solid #075d2c;
-    background:rgba(0,5,2,.95);
-    min-width:0;
-    display:flex;
-    flex-direction:column;
-}
-
-.termHead{
-    padding:10px 12px;
-    border-bottom:1px solid #075d2c;
-    font-size:11px;
-    color:#61a978;
-}
-
-.termHead span{
-    float:right;
-    color:#315e40;
-}
-
-.output{
-    height:650px;
-    overflow-y:auto;
-    padding:14px;
-    font-size:11px;
-    line-height:1.7;
-}
-
-.output::-webkit-scrollbar{
-    width:6px;
-}
-
-.output::-webkit-scrollbar-track{
-    background:#001108;
-}
-
-.output::-webkit-scrollbar-thumb{
-    background:#075d2c;
-}
-
-.line{
-    white-space:pre-wrap;
-    animation:appear .08s ease;
-}
-
-@keyframes appear{
-    from{opacity:0}
-    to{opacity:1}
-}
-
-.green{color:#00ff66}
-.cyan{color:#00eaff}
-.yellow{color:#dfff00}
-.red{color:#ff3838}
-.dim{color:#39784e}
-.white{color:#baffca}
-
-/* PROGRESS */
-
-.bottom{
-    padding:11px;
-    border-top:1px solid #075d2c;
-}
-
-.progressInfo{
-    display:flex;
-    justify-content:space-between;
-    font-size:10px;
-    margin-bottom:6px;
-}
-
-.progress{
-    height:7px;
-    border:1px solid #075d2c;
-    background:#061f11;
-}
-
-.bar{
-    height:100%;
-    width:0%;
-    background:#00ff66;
-    box-shadow:0 0 12px #00ff66;
-    transition:.12s;
-}
-
-/* MENU MISI */
-
-.missionMenu{
-    display:none;
-    padding:10px;
-    border-top:1px solid #075d2c;
-}
-
-.missionDots{
-    width:45px;
-    height:38px;
-    margin-left:auto;
-    font-size:22px;
-    padding:0;
-}
-
-.missionOptions{
-    display:none;
-    position:relative;
-    margin-left:auto;
-    width:230px;
-    background:#000b05;
-    border:1px solid #00ff66;
-}
-
-.missionOption{
-    padding:14px;
-    border-bottom:1px solid #073c20;
-    font-size:10px;
-    cursor:pointer;
-}
-
-.missionOption:last-child{
-    border:0;
-}
-
-.missionOption:hover{
-    background:#003817;
-}
-
-/* SUCCESS */
-
-#success{
-    display:none;
-    position:fixed;
-    inset:0;
-    z-index:30;
-    align-items:center;
-    justify-content:center;
-    background:#000;
-    text-align:center;
-}
-
-.successTitle{
-    font-size:40px;
-    font-weight:bold;
-    color:#00ff66;
-    text-shadow:
-        0 0 10px #00ff66,
-        0 0 30px #00ff66;
-}
-
-.successSub{
-    margin-top:14px;
-    color:#579d6d;
-    font-size:11px;
-}
-
-/* MOBILE */
-
-@media(max-width:700px){
-
-    .layout{
-        grid-template-columns:1fr;
-    }
-
-    .sidebar{
-        display:none;
-    }
-
-    .output{
-        height:calc(100vh - 190px);
-        min-height:500px;
-        font-size:10px;
-    }
-
-    .brand{
-        font-size:12px;
-    }
-}
+body{margin:0;background:#0b1020;color:#fff;font-family:Arial,sans-serif}
+header{padding:22px 16px;background:#121b32;text-align:center}
+header h1{margin:0;font-size:25px}
+header p{color:#aebbd5;font-size:13px}
+main{max-width:950px;margin:auto;padding:16px}
+.panel{background:#151f35;padding:17px;border-radius:16px;margin-bottom:18px}
+h2{font-size:18px;margin-top:0}
+label{display:block;font-size:13px;color:#cbd5e1;margin:13px 0 6px}
+input,select{width:100%;padding:12px;border:1px solid #35445e;
+border-radius:9px;background:#0d1629;color:white;font-size:15px}
+button{border:0;border-radius:10px;padding:12px;font-weight:bold;
+cursor:pointer;font-size:14px}
+.primary{background:#60a5fa;color:#07111f;width:100%;margin-top:15px}
+.preview{background:#0b1222;padding:18px 8px;border-radius:14px}
+.card{position:relative;overflow:hidden;width:100%;max-width:410px;
+aspect-ratio:1.586;margin:auto;border-radius:17px;
+background:linear-gradient(135deg,#1756a9,#10284b);
+padding:20px;color:white;box-shadow:0 12px 30px #0007}
+.card:before{content:"";position:absolute;width:220px;height:220px;
+border:35px solid #ffffff12;border-radius:50%;right:-75px;top:-90px}
+.card:after{content:"";position:absolute;width:140px;height:140px;
+background:#ffffff0b;border-radius:50%;left:45%;bottom:-100px}
+.card>*{position:relative;z-index:1}
+.top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.brand{font-size:15px;font-weight:800;letter-spacing:1px}
+.badge{font-size:9px;border:1px solid #ffffffa0;
+padding:5px 7px;border-radius:5px;letter-spacing:1px}
+.type{font-size:10px;letter-spacing:2px;margin-top:12px;color:#d9eaff}
+.details{display:flex;gap:14px;margin-top:17px;align-items:center}
+.photo{width:88px;height:108px;border-radius:8px;object-fit:cover;
+background:#dbeafe;flex-shrink:0}
+.info{min-width:0;overflow-wrap:anywhere}
+.caption{font-size:9px;color:#bfdbfe;letter-spacing:1px;margin-top:8px}
+.value{font-size:14px;font-weight:bold;margin-top:3px}
+.footer{position:absolute!important;bottom:13px;left:20px;right:20px;
+display:flex;justify-content:space-between;font-size:9px;color:#dbeafe}
+.warning{text-align:center;color:#fbbf24;font-size:10px;
+letter-spacing:1.5px;font-weight:bold;margin-top:12px}
+.actions{display:flex;gap:9px;margin-top:12px}
+.actions button{flex:1}
+.secondary{background:#253550;color:white}
+.small{font-size:12px;color:#9eacc5;line-height:1.6}
 </style>
 </head>
-
 <body>
-
-<canvas id="matrix"></canvas>
-
-<!-- LOGIN -->
-
-<div id="login">
-
-<div class="loginBox">
-
-<div class="logo">
-SANN // SECRET TERMINAL
-</div>
-
-<div class="sub">
-CLASSIFIED VIRTUAL ENVIRONMENT
-</div>
-
-<div style="font-size:11px">
-ENTER SECRET CODE
-</div>
-
-<input
-id="codeInput"
-placeholder="SANN-XXXX-XXXX"
-autocomplete="off">
-
-<button onclick="activate()">
-[ ENTER SECRET CODE ]
-</button>
-
-<div id="loginMsg"></div>
-
-<div style="
-text-align:center;
-font-size:9px;
-color:#444;
-margin-top:18px;">
-FICTIONAL SIMULATOR — NO REAL SYSTEM ACCESS
-</div>
-
-</div>
-</div>
-
-
-<!-- APP -->
-
-<div id="app">
-
 <header>
-
-<div class="brand">
-SANN//CYBER TERMINAL
-</div>
-
-<div style="display:flex;align-items:center;gap:15px">
-
-<div class="status">
-<span class="dot"></span>
-SIMULATION ONLINE
-</div>
-
-<!-- TITIK TIGA ATAS KANAN -->
-
-<div class="topMenu" id="topMenu">
-
-<button
-class="topDots"
-onclick="toggleTopMenu()">
-⋮
-</button>
-
-<div class="topOptions" id="topOptions">
-
-<div
-class="topOption"
-onclick="secretCodeLain()">
-🔐 SECRET CODE LAIN
-</div>
-
-<div
-class="topOption"
-onclick="kunciHasilHack()">
-🔑 KUNCI HASIL HACK
-</div>
-
-<div
-class="topOption"
-onclick="stopAll()">
-🛑 HENTIKAN SEMUA
-</div>
-
-</div>
-
-</div>
-
-</div>
-
+<h1>🎨 CARD MAKER</h1>
+<p>BY SANN • Buat kartu desainmu sendiri</p>
 </header>
 
+<main>
+<section class="panel">
+<h2>⚙️ Pengaturan Kartu</h2>
 
-<div class="layout">
+<label>Jenis kartu</label>
+<select id="type">
+<option value="ID">Kartu Identitas Fiksi</option>
+<option value="BANK">Kartu Bank Simulasi</option>
+<option value="SCHOOL">Kartu Pelajar</option>
+<option value="MEMBER">Kartu Anggota</option>
+<option value="GAME">Kartu Gamer</option>
+</select>
 
-<aside class="sidebar">
+<label>Nama / Pemilik</label>
+<input id="name" value="AKHSAN PRATAMA" maxlength="45">
 
-<h3>MISSION CONTROL</h3>
+<label>Nomor kartu dummy</label>
+<input id="number" value="DEMO-2026-001" maxlength="30">
 
-<div class="info">
-OPERATOR : SANN<br>
-MODE : SIMULATION<br>
-NETWORK : VIRTUAL<br>
-ACCESS : NONE
-</div>
+<label>Informasi tambahan</label>
+<input id="extra" value="KOTA PIXEL • KELAS 7" maxlength="55">
 
-<div class="info">
-MISSION<br>
-<span id="missionName">---</span>
-</div>
+<label>Tanggal</label>
+<input id="date" type="text" value="17 OKTOBER 2026" maxlength="30">
 
-<div class="info">
-STATUS<br>
-<span id="statusText">WAITING</span>
-</div>
+<label>Warna kartu</label>
+<input id="color" type="color" value="#1756a9">
 
-<div class="info">
-HACK KEY<br>
-<span id="hackKeySide">NOT GENERATED</span>
-</div>
+<label>Foto / avatar (opsional)</label>
+<input id="photo" type="file" accept="image/*">
 
-</aside>
-
-
-<section class="terminal">
-
-<div class="termHead">
-root@sann:~/classified
-<span>● ● ●</span>
-</div>
-
-<div class="output" id="output"></div>
-
-<div class="bottom">
-
-<div class="progressInfo">
-<span id="stage">WAITING</span>
-<span id="percent">0%</span>
-</div>
-
-<div class="progress">
-<div class="bar" id="bar"></div>
-</div>
-
-</div>
-
-
-<!-- TITIK TIGA SETELAH 100% -->
-
-<div
-class="missionMenu"
-id="missionMenu">
-
-<button
-class="missionDots"
-onclick="toggleMissionMenu()">
-⋮
-</button>
-
-<div
-class="missionOptions"
-id="missionOptions">
-
-<div
-class="missionOption"
-onclick="destroyMission()">
-💥 HANCURKAN MISI
-</div>
-
-<div
-class="missionOption"
-onclick="addKey()">
-🔑 TAMBAHKAN KUNCI
-</div>
-
-<div
-class="missionOption"
-onclick="continueHack()">
-⚡ LANJUT HACK
-</div>
-
-</div>
-
-</div>
-
+<button class="primary" id="update">🔄 Perbarui Kartu</button>
+<p class="small">Gunakan identitas fiksi dan nomor dummy. Jangan masukkan PIN, CVV, kata sandi, atau data bank asli.</p>
 </section>
 
+<section class="panel">
+<h2>👀 Pratinjau</h2>
+<div class="preview">
+<div class="card" id="card">
+<div class="top">
+<div class="brand" id="brand">SANNN ID</div>
+<div class="badge">DEMO ONLY</div>
+</div>
+<div class="type" id="heading">IDENTITAS DIGITAL FIKSI</div>
+<div class="details">
+<img class="photo" id="portrait" alt="Avatar">
+<div class="info">
+<div class="caption">NAMA PEMILIK</div>
+<div class="value" id="vname">AKHSAN PRATAMA</div>
+<div class="caption" id="numlabel">NOMOR DUMMY</div>
+<div class="value" id="vnumber">DEMO-2026-001</div>
+<div class="caption">INFORMASI</div>
+<div class="value" id="vextra">KOTA PIXEL</div>
 </div>
 </div>
-
-
-<!-- SUCCESS -->
-
-<div id="success">
-
-<div>
-
-<div class="successTitle">
-HACK SUCCESS
+<div class="footer">
+<span id="vdate">17 OKTOBER 2026</span>
+<span>BUKAN DOKUMEN RESMI</span>
 </div>
-
-<div class="successSub">
-VIRTUAL OPERATION COMPLETED
 </div>
-
-<div
-id="successCode"
-style="
-margin-top:20px;
-font-size:10px;
-color:#39784e;">
+<div class="warning">SIMULASI • BUKAN DOKUMEN ASLI</div>
 </div>
-
+<div class="actions">
+<button class="primary" id="download">📥 Simpan PNG</button>
+<button class="secondary" id="reset">Reset</button>
 </div>
-
-</div>
-
+</section>
+</main>
 
 <script>
+const $ = id => document.getElementById(id);
+let photoURL = "";
+let photoImage = null;
 
-/* MATRIX */
-
-const canvas=
-document.getElementById("matrix");
-
-const ctx=
-canvas.getContext("2d");
-
-let drops=[];
-
-function resize(){
-
-canvas.width=innerWidth;
-canvas.height=innerHeight;
-
-drops=
-Array(
-Math.floor(innerWidth/14)
-).fill(1);
-
-}
-
-resize();
-
-addEventListener("resize",resize);
-
-const chars=
-"01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&<>[]{}";
-
-function matrix(){
-
-ctx.fillStyle="rgba(0,0,0,.08)";
-ctx.fillRect(
-0,0,
-canvas.width,
-canvas.height
-);
-
-ctx.fillStyle="#00ff66";
-ctx.font="14px monospace";
-
-drops.forEach((y,i)=>{
-
-const c=
-chars[
-Math.floor(
-Math.random()*chars.length
-)];
-
-ctx.fillText(c,i*14,y*14);
-
-if(
-y*14>canvas.height &&
-Math.random()>.975
-){
-drops[i]=0;
-}
-
-drops[i]++;
-
-});
-}
-
-setInterval(matrix,40);
-
-
-/* SECRET CODES */
-
-const codes={
-
-"SANN-X7K9-2048":"NIGHTFALL",
-"NEXUS-91A7-CORE":"NEXUS",
-"SHADOW-4F82-ZX":"SHADOW",
-"BLACKOUT-77Q1":"BLACKOUT",
-"GHOST-AX19-5K":"GHOST",
-"CYBER-08M4-NOVA":"NOVA",
-"VOID-7319-ALPHA":"VOID",
-"PHANTOM-X92K":"PHANTOM",
-"MATRIX-5D71-SANN":"MATRIX",
-"ZERO-ACCESS-482":"ZERO",
-"NIGHT-3F90-CORE":"NIGHT",
-"ECHO-77AX-19":"ECHO",
-"QUANTUM-204-X":"QUANTUM",
-"DARKNET-61P8":"DARKNET",
-"OMEGA-SANN-999":"OMEGA"
-
+const themes = {
+ ID: {brand:"SANNN ID",heading:"IDENTITAS DIGITAL FIKSI",label:"NOMOR DUMMY",color:"#1756a9"},
+ BANK: {brand:"PIXEL BANK",heading:"KARTU BANK SIMULASI",label:"NOMOR KARTU DUMMY",color:"#087e72"},
+ SCHOOL: {brand:"PIXEL SCHOOL",heading:"KARTU PELAJAR FIKSI",label:"ID PELAJAR DUMMY",color:"#7c3aed"},
+ MEMBER: {brand:"SANNN CLUB",heading:"KARTU ANGGOTA",label:"ID ANGGOTA DUMMY",color:"#b45309"},
+ GAME: {brand:"SANNN GAMING",heading:"GAMER PROFILE CARD",label:"PLAYER ID DUMMY",color:"#be185d"}
 };
 
-const output=
-document.getElementById("output");
-
-let mission="";
-let running=false;
-let destroyed=false;
-let hackKey="";
-
-
-/* HELPERS */
-
-function wait(ms){
-    return new Promise(r=>setTimeout(r,ms));
+function updateCard(){
+ const t = themes[$("type").value];
+ $("brand").textContent = t.brand;
+ $("heading").textContent = t.heading;
+ $("numlabel").textContent = t.label;
+ $("card").style.background =
+ `linear-gradient(135deg,${$("color").value},#10172b)`;
+ $("vname").textContent = $("name").value || "NAMA PEMILIK";
+ $("vnumber").textContent = $("number").value || "DEMO-000";
+ $("vextra").textContent = $("extra").value || "-";
+ $("vdate").textContent = $("date").value || "-";
 }
 
-function hex(n){
-
-    const c="0123456789ABCDEF";
-    let x="";
-
-    for(let i=0;i<n;i++)
-        x+=c[Math.floor(Math.random()*16)];
-
-    return x;
-}
-
-function print(text,cls="dim"){
-
-    const d=
-    document.createElement("div");
-
-    d.className="line "+cls;
-    d.textContent=text;
-
-    output.appendChild(d);
-
-    output.scrollTop=
-    output.scrollHeight;
-}
-
-
-/* LOGIN */
-
-function activate(){
-
-    const value=
-    document
-    .getElementById("codeInput")
-    .value
-    .trim()
-    .toUpperCase();
-
-    const msg=
-    document.getElementById("loginMsg");
-
-    if(!codes[value]){
-
-        msg.textContent=
-        "ACCESS DENIED // INVALID SECRET CODE";
-
-        msg.style.color="#ff3838";
-
-        return;
-    }
-
-    mission=codes[value];
-
-    document
-    .getElementById("login")
-    .style.display="none";
-
-    document
-    .getElementById("app")
-    .style.display="block";
-
-    document
-    .getElementById("missionName")
-    .textContent=
-    "OPERATION "+mission;
-
-    startMission();
-}
-
-
-/* START */
-
-async function startMission(){
-
-    running=true;
-    destroyed=false;
-
-    output.innerHTML="";
-
-    print(
-    "╔══════════════════════════════════════╗",
-    "cyan");
-
-    print(
-    "║       CLASSIFIED MISSION START      ║",
-    "cyan");
-
-    print(
-    "╚══════════════════════════════════════╝",
-    "cyan");
-
-    await wait(400);
-
-    print(
-    "> SECRET CODE ACCEPTED",
-    "green");
-
-    await wait(300);
-
-    print(
-    "> OPERATION : "+mission,
-    "yellow");
-
-    await wait(300);
-
-    print(
-    "> Initializing virtual environment...",
-    "dim");
-
-    await wait(500);
-
-    print(
-    "[OK] Virtual kernel loaded",
-    "green");
-
-    await wait(300);
-
-    print(
-    "[OK] Simulation security active",
-    "green");
-
-    await runMainMission();
-}
-
-
-/* MAIN MISSION 0-100 */
-
-async function runMainMission(){
-
-    const stages=[
-
-        ["INITIALIZING CORE",20],
-        ["GENERATING VIRTUAL TARGET",25],
-        ["BUILDING SIMULATED CONNECTION",30],
-        ["PROCESSING VIRTUAL DATA",35],
-        ["DECRYPTING VISUAL CONTENT",40],
-        ["VERIFYING VIRTUAL ACCESS",35],
-        ["RUNNING FINAL PROTOCOL",35],
-        ["FINALIZING MISSION",20]
-
-    ];
-
-    const total=
-    stages.reduce((a,b)=>a+b[1],0);
-
-    let current=0;
-
-    for(const s of stages){
-
-        if(destroyed)return;
-
-        document
-        .getElementById("stage")
-        .textContent=s[0];
-
-        for(let i=0;i<s[1];i++){
-
-            if(destroyed)return;
-
-            current++;
-
-            const p=
-            Math.floor(current/total*100);
-
-            setProgress(p);
-
-            fakeLog(p);
-
-            await wait(
-                Math.random()*130+60
-            );
-        }
-    }
-
-    running=false;
-
-    document
-    .getElementById("stage")
-    .textContent=
-    "MISSION COMPLETE";
-
-    document
-    .getElementById("statusText")
-    .textContent=
-    "100% COMPLETE";
-
-    print("");
-    print(
-    "══════════════════════════════════════",
-    "green");
-
-    print(
-    "[100%] MISSION COMPLETE",
-    "green");
-
-    print(
-    "> Mission waiting for command.",
-    "cyan");
-
-    print(
-    "> Open ⋮ for available actions.",
-    "yellow");
-
-    document
-    .getElementById("missionMenu")
-    .style.display="block";
-}
-
-
-/* PROGRESS */
-
-function setProgress(p){
-
-    document
-    .getElementById("bar")
-    .style.width=p+"%";
-
-    document
-    .getElementById("percent")
-    .textContent=p+"%";
-}
-
-
-/* FAKE LOG */
-
-function fakeLog(p){
-
-    const logs=[
-
-    "Generating virtual packet...",
-    "Analyzing simulated node...",
-    "Creating artificial handshake...",
-    "Checking fictional checksum...",
-    "Rotating virtual key...",
-    "Processing virtual buffer...",
-    "Generating random hash...",
-    "Updating virtual process...",
-    "Rendering encrypted visual...",
-    "Synchronizing virtual node...",
-    "Verifying simulated response...",
-    "Refreshing terminal stream...",
-    "Creating temporary session...",
-    "Parsing virtual structure...",
-    "Updating mission protocol...",
-    "Simulating data transfer...",
-    "Checking virtual integrity...",
-    "Preparing next layer...",
-    "Loading artificial module..."
-
-    ];
-
-    const action=
-    logs[
-    Math.floor(
-    Math.random()*logs.length)];
-
-    const formats=[
-
-    `> ${action} [${p}%]`,
-    `> PACKET ${hex(10)} :: SIMULATED`,
-    `> HASH ${hex(16)} :: VERIFIED`,
-    `> KEY ${hex(18)} :: ROTATED`,
-    `> SESSION ${hex(12)} :: ACTIVE`,
-    `> PROCESS ${hex(7)} :: RUNNING`,
-    `> BUFFER ${hex(8)} :: ${p}%`,
-    `> VIRTUAL NODE ${hex(6)} :: ONLINE`
-
-    ];
-
-    print(
-    formats[
-    Math.floor(
-    Math.random()*formats.length)],
-    Math.random()>.82
-    ?"cyan"
-    :"dim");
-}
-
-
-/* MISSION MENU */
-
-function toggleMissionMenu(){
-
-    const m=
-    document.getElementById("missionOptions");
-
-    m.style.display=
-    m.style.display==="block"
-    ?"none"
-    :"block";
-}
-
-
-/* DESTROY */
-
-async function destroyMission(){
-
-    document
-    .getElementById("missionOptions")
-    .style.display="none";
-
-    destroyed=true;
-    running=false;
-
-    document
-    .getElementById("stage")
-    .textContent=
-    "MISSION DESTROY";
-
-    document
-    .getElementById("statusText")
-    .textContent=
-    "ERROR";
-
-    print("");
-    print(
-    "!!! DESTROY PROTOCOL ACTIVATED !!!",
-    "red");
-
-    await wait(300);
-
-    /* SPAM ERROR */
-
-    for(let i=0;i<180;i++){
-
-        const type=
-        Math.floor(Math.random()*7);
-
-        if(type===0){
-
-            print(
-            "CONTENT ERROR :: "+
-            hex(8)+
-            " :: FILE NOT FOUND",
-            "red");
-
-        }else if(type===1){
-
-            print(
-            "CONTENT DELETE :: "+
-            hex(12)+
-            " :: DELETED",
-            "red");
-
-        }else if(type===2){
-
-            print(
-            "ERROR 0x"+
-            hex(8)+
-            " :: CONTENT CORRUPTED",
-            "red");
-
-        }else if(type===3){
-
-            print(
-            "SYSTEM ERROR :: "+
-            hex(10)+
-            " :: FAILED",
-            "red");
-
-        }else if(type===4){
-
-            print(
-            "DELETE PROCESS :: "+
-            hex(10)+
-            " :: PURGED",
-            "yellow");
-
-        }else if(type===5){
-
-            print(
-            "CONTENT ERROR :: BUFFER "+
-            hex(6)+
-            " :: EMPTY",
-            "red");
-
-        }else{
-
-            print(
-            "VIRTUAL FILE "+
-            hex(10)+
-            " :: REMOVED",
-            "red");
-        }
-
-        await wait(
-        Math.random()*18+8);
-    }
-
-    print("");
-    print(
-    "!!! MISSION CONTENT DESTROYED !!!",
-    "red");
-
-    await wait(1000);
-
-    resetToLogin();
-}
-
-
-/* ADD KEY */
-
-async function addKey(){
-
-    document
-    .getElementById("missionOptions")
-    .style.display="none";
-
-    print("");
-    print(
-    "> KEY GENERATION STARTED",
-    "cyan");
-
-    await wait(500);
-
-    hackKey=
-    "SANN-"+hex(5)+
-    "-"+hex(5)+
-    "-"+hex(5);
-
-    print(
-    "> Generating hack result key...",
-    "dim");
-
-    await wait(600);
-
-    print(
-    "> KEY CREATED : "+hackKey,
-    "green");
-
-    document
-    .getElementById("hackKeySide")
-    .textContent=
-    hackKey;
-
-    print(
-    "> KEY SAVED TO SECRET ACCESS",
-    "green");
-
-    print(
-    "> New options are now available in ⋮ above.",
-    "yellow");
-}
-
-
-/* CONTINUE HACK */
-
-async function continueHack(){
-
-    document
-    .getElementById("missionOptions")
-    .style.display="none";
-
-    if(running)return;
-
-    running=true;
-
-    print("");
-    print(
-    ">>> CONTINUING HACK SIMULATION <<<",
-    "cyan");
-
-    await wait(400);
-
-    for(let i=0;i<=100;i++){
-
-        if(destroyed)return;
-
-        setProgress(i);
-
-        document
-        .getElementById("stage")
-        .textContent=
-        "CONTINUING HACK";
-
-        fakeLog(i);
-
-        await wait(
-        Math.random()*70+40);
-    }
-
-    running=false;
-
-    print("");
-    print(
-    "[100%] CONTINUE HACK COMPLETE",
-    "green");
-
-    print(
-    "> Open ⋮ for another action.",
-    "yellow");
-}
-
-
-/* TOP MENU */
-
-function toggleTopMenu(){
-
-    const menu=
-    document.getElementById("topOptions");
-
-    menu.style.display=
-    menu.style.display==="block"
-    ?"none"
-    :"block";
-}
-
-
-/* SECRET CODE LAIN */
-
-function secretCodeLain(){
-
-    document
-    .getElementById("topOptions")
-    .style.display="none";
-
-    resetToLogin();
-}
-
-
-/* KUNCI HASIL HACK */
-
-async function kunciHasilHack(){
-
-    document
-    .getElementById("topOptions")
-    .style.display="none";
-
-    if(!hackKey){
-
-        print("");
-        print(
-        "> ERROR: NO HACK KEY FOUND",
-        "red");
-
-        print(
-        "> Create a key from the mission menu first.",
-        "yellow");
-
-        return;
-    }
-
-    if(running)return;
-
-    running=true;
-
-    print("");
-    print(
-    "╔══════════════════════════════════════╗",
-    "cyan");
-
-    print(
-    "║       HACK KEY AUTHENTICATION       ║",
-    "cyan");
-
-    print(
-    "╚══════════════════════════════════════╝",
-    "cyan");
-
-    await wait(500);
-
-    print(
-    "> KEY : "+hackKey,
-    "green");
-
-    await wait(400);
-
-    print(
-    "> KEY ACCEPTED",
-    "green");
-
-    await wait(400);
-
-    print(
-    "> Starting final virtual hack...",
-    "yellow");
-
-    for(let i=0;i<=100;i++){
-
-        setProgress(i);
-
-        document
-        .getElementById("stage")
-        .textContent=
-        "FINAL HACK";
-
-        const specialLogs=[
-
-        "> Bypassing visual security layer...",
-        "> Processing encrypted simulation...",
-        "> Verifying virtual credentials...",
-        "> Accessing fictional content...",
-        "> Decrypting simulated result...",
-        "> Synchronizing virtual access...",
-        "> Finalizing virtual operation..."
-
-        ];
-
-        print(
-        specialLogs[
-        Math.floor(
-        Math.random()*specialLogs.length)],
-        i>85?"cyan":"dim");
-
-        await wait(
-        Math.random()*70+50);
-    }
-
-    running=false;
-
-    await wait(300);
-
-    hackSuccess();
-}
-
-
-/* HACK SUCCESS */
-
-async function hackSuccess(){
-
-    document
-    .getElementById("stage")
-    .textContent=
-    "HACK SUCCESS";
-
-    setProgress(100);
-
-    print("");
-    print(
-    "══════════════════════════════════════",
-    "green");
-
-    print(
-    "[100%] HACK SUCCESS",
-    "green");
-
-    print(
-    "> SECRET KEY VERIFIED.",
-    "green");
-
-    print(
-    "> VIRTUAL OPERATION COMPLETED.",
-    "white");
-
-    print(
-    "> Returning to initial page...",
-    "cyan");
-
-    await wait(1800);
-
-    document
-    .getElementById("successCode")
-    .textContent=
-    "SIMULATION ID : SANN-"+hex(10);
-
-    document
-    .getElementById("success")
-    .style.display="flex";
-
-    await wait(2500);
-
-    resetToLogin();
-}
-
-
-/* STOP ALL */
-
-function stopAll(){
-
-    document
-    .getElementById("topOptions")
-    .style.display="none";
-
-    running=false;
-    destroyed=true;
-
-    print("");
-    print(
-    "!!! ALL PROCESSES STOPPED !!!",
-    "red");
-
-    print(
-    "> Simulation terminated.",
-    "yellow");
-
-    setTimeout(
-    resetToLogin,
-    1200);
-}
-
-
-/* RESET */
-
-function resetToLogin(){
-
-    running=false;
-    destroyed=true;
-
-    document
-    .getElementById("success")
-    .style.display="none";
-
-    document
-    .getElementById("app")
-    .style.display="none";
-
-    document
-    .getElementById("login")
-    .style.display="flex";
-
-    document
-    .getElementById("codeInput")
-    .value="";
-
-    document
-    .getElementById("loginMsg")
-    .textContent="";
-
-    document
-    .getElementById("missionMenu")
-    .style.display="none";
-
-    document
-    .getElementById("missionOptions")
-    .style.display="none";
-
-    document
-    .getElementById("topOptions")
-    .style.display="none";
-
-    document
-    .getElementById("bar")
-    .style.width="0%";
-
-    document
-    .getElementById("percent")
-    .textContent="0%";
-
-    document
-    .getElementById("stage")
-    .textContent="WAITING";
-
-}
-
-
-/* ENTER */
-
-document
-.getElementById("codeInput")
-.addEventListener(
-"keydown",
-e=>{
-    if(e.key==="Enter")
-        activate();
+$("type").addEventListener("change",()=>{
+ $("color").value = themes[$("type").value].color;
+ updateCard();
+});
+["name","number","extra","date","color"].forEach(id=>{
+ $(id).addEventListener("input",updateCard);
+});
+$("update").onclick = updateCard;
+
+$("photo").addEventListener("change",e=>{
+ const file = e.target.files[0];
+ if(!file) return;
+ if(!file.type.startsWith("image/")) return alert("Pilih file gambar.");
+ if(file.size > 5*1024*1024) return alert("Ukuran foto maksimal 5 MB.");
+ const reader = new FileReader();
+ reader.onload = ()=>{
+   photoURL = reader.result;
+   photoImage = new Image();
+   photoImage.onload = ()=>{
+     $("portrait").src = photoURL;
+   };
+   photoImage.src = photoURL;
+ };
+ reader.readAsDataURL(file);
 });
 
-</script>
+function roundedRect(ctx,x,y,w,h,r){
+ ctx.beginPath();
+ ctx.roundRect(x,y,w,h,r);
+ ctx.fill();
+}
 
+$("download").onclick = ()=>{
+ const c = document.createElement("canvas");
+ c.width = 1000;
+ c.height = 630;
+ const ctx = c.getContext("2d");
+ const color = $("color").value;
+ ctx.save();
+ roundedRect(ctx,0,0,1000,630,38);
+ ctx.restore();
+
+ const grad = ctx.createLinearGradient(0,0,1000,630);
+ grad.addColorStop(0,color);
+ grad.addColorStop(1,"#10172b");
+ ctx.fillStyle = grad;
+ roundedRect(ctx,0,0,1000,630,38);
+
+ ctx.fillStyle="#ffffff12";
+ ctx.beginPath();ctx.arc(950,60,220,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle="white";
+ ctx.font="bold 34px Arial";
+ ctx.fillText($("brand").textContent,55,75);
+ ctx.font="bold 19px Arial";
+ ctx.textAlign="right";
+ ctx.fillText("DEMO ONLY",945,72);
+ ctx.textAlign="left";
+ ctx.fillStyle="#dbeafe";
+ ctx.font="22px Arial";
+ ctx.fillText($("heading").textContent,55,130);
+
+ ctx.fillStyle="#dbeafe";
+ roundedRect(ctx,55,170,220,270,12);
+
+ if(photoImage){
+   ctx.save();
+   ctx.beginPath();
+   ctx.roundRect(55,170,220,270,12);
+   ctx.clip();
+   const scale=Math.max(220/photoImage.width,270/photoImage.height);
+   const w=photoImage.width*scale,h=photoImage.height*scale;
+   ctx.drawImage(photoImage,55+(220-w)/2,170+(270-h)/2,w,h);
+   ctx.restore();
+ }else{
+   ctx.fillStyle="#17345c";
+   ctx.fillRect(55,170,220,270);
+   ctx.fillStyle="white";
+   ctx.font="bold 25px Arial";
+   ctx.fillText("AVATAR",105,310);
+ }
+
+ function line(label,value,y){
+   ctx.fillStyle="#bfdbfe";
+   ctx.font="17px Arial";
+   ctx.fillText(label,315,y);
+   ctx.fillStyle="white";
+   ctx.font="bold 29px Arial";
+   let s=value||"-";
+   while(ctx.measureText(s).width>620 && s.length>3) s=s.slice(0,-1);
+   ctx.fillText(s,315,y+38);
+ }
+ line("NAMA PEMILIK",$("name").value,195);
+ line($("numlabel").textContent,$("number").value,290);
+ line("INFORMASI",$("extra").value,385);
+
+ ctx.fillStyle="#dbeafe";
+ ctx.font="18px Arial";
+ ctx.fillText($("date").value,55,530);
+ ctx.textAlign="right";
+ ctx.font="bold 18px Arial";
+ ctx.fillText("SIMULASI • BUKAN DOKUMEN RESMI",945,580);
+ ctx.textAlign="left";
+ ctx.fillStyle="#ffffff";
+ ctx.font="bold 25px Arial";
+ ctx.fillText("SIMULASI",55,580);
+
+ const a=document.createElement("a");
+ a.download="kartu-simulasi.png";
+ a.href=c.toDataURL("image/png");
+ a.click();
+};
+
+$("reset").onclick=()=>{
+ $("type").value="ID";
+ $("name").value="AKHSAN PRATAMA";
+ $("number").value="DEMO-2026-001";
+ $("extra").value="KOTA PIXEL • KELAS 7";
+ $("date").value="17 OKTOBER 2026";
+ $("color").value="#1756a9";
+ $("photo").value="";
+ photoURL="";
+ photoImage=null;
+ $("portrait").removeAttribute("src");
+ updateCard();
+};
+
+updateCard();
+</script>
 </body>
 </html>
